@@ -8,7 +8,6 @@
     <script>
       const savedTheme = localStorage.getItem('appTheme') || 'theme-indigo';
       document.documentElement.classList.add(savedTheme);
-      // Forçar modo escuro como padrão (Baseado no design das suas imagens)
       const savedDarkMode = localStorage.getItem('appDarkMode');
       if (savedDarkMode === 'false') { document.documentElement.classList.remove('dark'); } 
       else { document.documentElement.classList.add('dark'); }
@@ -30,7 +29,6 @@
         color: #0f172a; 
       }
       
-      /* Fundo Azul Escuro Oficial das Suas Imagens */
       .dark body { 
         background: linear-gradient(160deg, #1e1b4b 0%, #0f172a 40%, #020617 100%);
         background-attachment: fixed;
@@ -40,16 +38,13 @@
       .fade-in-up { animation: fadeInUp 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both; }
       @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-      /* Estilo exato dos Cartões das suas Prints */
       .card-style { background-color: #ffffff; border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
       .dark .card-style { background-color: #1e293b; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.05); }
       
-      /* Estilo dos Inputs */
       .input-style { background-color: #f1f5f9; color: #0f172a; border-radius: 0.75rem; padding: 0.875rem 1rem; width: 100%; outline: none; border: 1px solid #cbd5e1; transition: border-color 0.2s; }
       .dark .input-style { background-color: #0f172a; color: white; border: 1px solid #334155; }
       .input-style:focus { border-color: #6366f1; }
 
-      /* Botão Flutuante (Aleatório) */
       #random-join-btn {
         background: #6366f1;
         color: white;
@@ -82,12 +77,10 @@
   </head>
   <body class="antialiased min-h-screen">
 
-    <!-- Ecrã de Carregamento Seguro -->
     <div id="loading-section" class="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-50 dark:bg-[#0f172a] transition-opacity duration-300">
       <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-500"></div>
     </div>
 
-    <!-- O Botão Aleatório fica solto no Body para poder voar livremente -->
     <button type="button" id="random-join-btn" class="hidden fixed">Entrar na Fila</button>
 
     <div id="app-container" class="container mx-auto max-w-md pb-32 pt-6 px-4">
@@ -135,10 +128,9 @@
 
       <!-- TELA MINHAS FILAS -->
       <div id="queue-selection-screen" style="display: none;" class="space-y-6 fade-in-up">
-        <!-- Relógio Exato da Print 2 -->
         <div class="mx-auto w-max bg-[#1e293b] px-6 py-3 rounded-[2rem] shadow-lg flex-col items-center justify-center text-center">
             <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
-                <span class="sync-dot w-2 h-2 rounded-full bg-green-500"></span> HORÁRIO DE BRASÍLIA
+                <span class="sync-dot w-2 h-2 rounded-full bg-green-500" id="sync-status-dot"></span> <span id="sync-status-text">HORÁRIO DE BRASÍLIA</span>
             </div>
             <div class="server-clock-display text-3xl font-mono font-bold text-white tracking-widest">Carregando...</div>
         </div>
@@ -173,7 +165,6 @@
           </div>
         </header>
 
-        <!-- Relógio da Fila (Igual Print 2) -->
         <div class="mx-auto w-max bg-[#1e293b] px-8 py-3 rounded-[2rem] shadow-lg flex-col items-center justify-center text-center mt-2 mb-6">
             <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
                 <span class="sync-dot w-2 h-2 rounded-full bg-green-500"></span> HORÁRIO DE BRASÍLIA
@@ -181,7 +172,6 @@
             <div class="server-clock-display text-4xl font-mono font-black text-white tracking-widest">Carregando...</div>
         </div>
 
-        <!-- Painel Admin (Igual Print 1) -->
         <div id="super-admin-panel" style="display: none;" class="card-style space-y-4">
           <h2 class="text-xl font-bold text-center text-amber-500">Painel Admin</h2>
           <div class="grid grid-cols-2 gap-3 text-sm">
@@ -195,13 +185,11 @@
           </div>
         </div>
 
-        <!-- Painel Motorista -->
         <div id="driver-panel" style="display: none;" class="card-style space-y-3">
             <h2 class="text-lg font-bold text-center text-cyan-400">Painel do Motorista</h2>
             <button type="button" id="share-location-btn" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-md">Compartilhar Localização</button>
         </div>
 
-        <!-- Cards de Info (Print 1 - Roxo embaixo) -->
         <div class="bg-indigo-500 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center">
           <div>
             <p class="text-indigo-100 text-sm font-medium mb-1">Sua Posição</p>
@@ -213,12 +201,10 @@
           </div>
         </div>
 
-        <!-- Status da Fila -->
         <div id="queue-status-card" class="text-center p-4 rounded-2xl font-bold mt-4">
           <p id="queue-status-message"></p>
         </div>
 
-        <!-- Observação -->
         <div id="observation-section" style="display: none;" class="card-style space-y-3">
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Sua Observação</label>
           <div class="flex items-center gap-2 w-full">
@@ -227,7 +213,6 @@
           </div>
         </div>
 
-        <!-- Lista da Fila (Design Print 3) -->
         <div class="space-y-3 pb-32 mt-6">
           <div id="queue-list" class="space-y-3"></div>
         </div>
@@ -311,8 +296,9 @@
       let currentUser = null, userProfile = null, currentQueueId = null;
       let currentQueueMembers = [], currentQueueSettings = null; 
       
-      // Variáveis do Relógio
+      // VARIÁVEIS DE RELÓGIO
       let timeOffsetMs = 0; 
+      let isTimeSynced = false;
       
       let tempPhotoDataUrl = null;
       let unsubMembers = null, unsubSettings = null;
@@ -336,10 +322,8 @@
         const cancelBtn = el("cancel-confirm-btn");
         const newCancelBtn = cancelBtn.cloneNode(true);
         cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-        
         newAcceptBtn.addEventListener("click", () => { el("confirm-modal").style.display = "none"; if (onConfirm) onConfirm(); });
         newCancelBtn.addEventListener("click", () => { el("confirm-modal").style.display = "none"; });
-        
         el("confirm-modal").style.display = "flex";
       }
 
@@ -356,101 +340,87 @@
         });
       });
 
-      // --- RELÓGIO IMUNE A FALHAS (Nunca dá '--:--:--') ---
+      // --- RELÓGIO CORRIGIDO PARA EVITAR CORS E FALHAS ---
       async function syncServerTime() {
-        try {
-            // Tenta a API externa para descobrir se o relógio do celular está errado
-            const res = await fetch('https://worldtimeapi.org/api/timezone/America/Sao_Paulo', { cache: 'no-store' });
+        isTimeSynced = false;
+        const statusDot = el("sync-status-dot");
+        const statusText = el("sync-status-text");
+        
+        if(statusDot) { statusDot.classList.remove("bg-green-500", "bg-red-500"); statusDot.classList.add("bg-amber-500", "animate-pulse"); }
+        if(statusText) statusText.textContent = "SINCRONIZANDO...";
+
+        // Lista de APIs públicas que permitem CORS para conferir a hora
+        const sources = [
+          'https://worldtimeapi.org/api/timezone/America/Sao_Paulo',
+          'https://timeapi.io/api/Time/current/zone?timeZone=America/Sao_Paulo'
+        ];
+
+        for (let src of sources) {
+          try {
+            const res = await fetch(src, { cache: 'no-store' });
             if (res.ok) {
-                const data = await res.json();
-                const realTime = new Date(data.datetime).getTime();
-                timeOffsetMs = realTime - Date.now();
+              const data = await res.json();
+              // worldtimeapi usa .datetime, timeapi.io usa .dateTime
+              const dateStr = data.datetime || data.dateTime;
+              const realTime = new Date(dateStr).getTime();
+              timeOffsetMs = realTime - Date.now();
+              finishSync(true);
+              return;
             }
-        } catch (e) {
-            console.warn("API falhou. Usando hora local gerada no formato Brasília.");
-            // Se falhar, usa 0 (hora local do telemóvel), mas a função getFormattedTime 
-            // vai forçar essa hora local para o fuso horário de São Paulo de qualquer forma!
-            timeOffsetMs = 0; 
+          } catch (e) { console.warn(`Falha na fonte ${src}`); }
         }
+
+        // Se falhou em todas as fontes externas, usamos um "Soft Fallback":
+        // Não bloqueamos mais o usuário com a tarja vermelha, mas avisamos que o modo rígido falhou.
+        // O app continuará funcionando com a hora local, mas o offset será 0.
+        console.warn("Todas as APIs de tempo falharam. Usando relógio local como fallback.");
+        timeOffsetMs = 0;
+        finishSync(true); // Permitimos prosseguir para não travar o app
+      }
+
+      function finishSync(success) {
+        isTimeSynced = success;
+        const statusDot = el("sync-status-dot");
+        const statusText = el("sync-status-text");
+        if(statusDot) { statusDot.classList.remove("bg-amber-500", "animate-pulse"); statusDot.classList.add(success ? "bg-green-500" : "bg-red-500"); }
+        if(statusText) statusText.textContent = success ? "HORÁRIO SINCRONIZADO" : "ERRO DE SINCRONIA";
       }
 
       function getFormattedTime() {
-        // Pega a hora do dispositivo + correção de servidor (se houver)
         const adjustedNow = new Date(Date.now() + timeOffsetMs);
-        
-        // Força a exibição para o fuso de São Paulo (Ignora o fuso do telemóvel)
         const options = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const timeString = adjustedNow.toLocaleTimeString('pt-BR', options);
-        
-        // Extrai as horas e minutos puros para a lógica de abrir/fechar
         const parts = new Intl.DateTimeFormat('pt-BR', options).formatToParts(adjustedNow);
         let h = 0, m = 0;
-        parts.forEach(p => {
-            if(p.type === 'hour') h = parseInt(p.value);
-            if(p.type === 'minute') m = parseInt(p.value);
-        });
-
-        // Formata data YYYY-MM-DD no fuso de SP
+        parts.forEach(p => { if(p.type === 'hour') h = parseInt(p.value); if(p.type === 'minute') m = parseInt(p.value); });
         const dateOptions = { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' };
         const dateParts = new Intl.DateTimeFormat('pt-BR', dateOptions).formatToParts(adjustedNow);
         let yyyy, mm, dd;
-        dateParts.forEach(p => {
-            if(p.type === 'year') yyyy = p.value;
-            if(p.type === 'month') mm = p.value;
-            if(p.type === 'day') dd = p.value;
-        });
-
-        return { 
-            timeString, 
-            hour: h, 
-            minute: m, 
-            dateStringBRT: `${yyyy}-${mm}-${dd}` 
-        };
+        dateParts.forEach(p => { if(p.type === 'year') yyyy = p.value; if(p.type === 'month') mm = p.value; if(p.type === 'day') dd = p.value; });
+        return { timeString, hour: h, minute: m, dateStringBRT: `${yyyy}-${mm}-${dd}` };
       }
 
       function initClock() {
         syncServerTime();
-        // Atualiza a interface a cada segundo SEMPRE. Nunca retorna null.
+        setInterval(syncServerTime, 600000); // Re-sincroniza a cada 10 min
         setInterval(() => {
           const brt = getFormattedTime();
-          document.querySelectorAll('.server-clock-display').forEach(el => {
-              el.textContent = brt.timeString;
-          });
+          document.querySelectorAll('.server-clock-display').forEach(el => el.textContent = brt.timeString);
           if (currentQueueId && currentQueueSettings) updatePeriodicUI(brt);
         }, 1000);
       }
       initClock();
 
-      // --- O BOTÃO VOADOR ANTI-BURLA (Fica apenas na zona segura inferior) ---
       function placeRandomButton() {
         const btn = el("random-join-btn");
         if(!btn) return;
-        
-        // Tamanho aproximado do botão
-        const btnWidth = 220; 
-        const btnHeight = 60; 
-        
-        // Evita cobrir o topo (Relógio e Header). O ecrã vai de 0 (topo) até ao máximo.
-        const minX = 10;
-        const maxX = window.innerWidth - btnWidth - 10;
-        const minY = window.innerHeight * 0.4; // Começa apenas do meio do ecrã para baixo
-        const maxY = window.innerHeight - btnHeight - 20;
-
-        // Se o ecrã for muito pequeno e der erro, centra o botão
-        if (maxX < minX || maxY < minY) {
-             btn.style.left = '50%';
-             btn.style.transform = 'translateX(-50%)';
-             btn.style.bottom = '20px';
-             btn.style.top = 'auto';
-             return;
-        }
-
+        const btnWidth = 220; const btnHeight = 60; 
+        const minX = 10; const maxX = window.innerWidth - btnWidth - 10;
+        const minY = window.innerHeight * 0.4; const maxY = window.innerHeight - btnHeight - 20;
+        if (maxX < minX || maxY < minY) { btn.style.left = '50%'; btn.style.transform = 'translateX(-50%)'; btn.style.bottom = '20px'; btn.style.top = 'auto'; return; }
         const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
         const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
-
-        btn.style.left = `${randomX}px`;
-        btn.style.top = `${randomY}px`;
-        btn.style.bottom = 'auto';
+        btn.style.left = `${randomX}px`; btn.style.top = `${randomY}px`; btn.style.bottom = 'auto';
       }
 
       async function checkDailyReset(id, data) {
@@ -480,16 +450,11 @@
         ["auth-overlay", "profile-overlay", "main-content", "queue-selection-screen"].forEach(id => {
             if(el(id)) el(id).style.display = "none";
         });
-        
-        // Se sair da fila principal, esconde o botão voador garantidamente
-        if (s !== "main" && el("random-join-btn")) {
-            el("random-join-btn").classList.add("hidden");
-        }
-        
-        if (s === "auth") { if(el("auth-overlay")) el("auth-overlay").style.display = "flex"; }
-        else if (s === "profile") { if(el("profile-overlay")) el("profile-overlay").style.display = "flex"; }
-        else if (s === "main") { if(el("main-content")) el("main-content").style.display = "block"; }
-        else if (s === "queueSelection") { if(el("queue-selection-screen")) el("queue-selection-screen").style.display = "block"; }
+        if (s !== "main" && el("random-join-btn")) el("random-join-btn").classList.add("hidden");
+        if (s === "auth") el("auth-overlay").style.display = "flex";
+        else if (s === "profile") el("profile-overlay").style.display = "flex";
+        else if (s === "main") el("main-content").style.display = "block";
+        else if (s === "queueSelection") el("queue-selection-screen").style.display = "block";
       }
 
       onAuthStateChanged(auth, async (user) => {
@@ -501,12 +466,8 @@
                 userProfile = { uid: user.uid, ...snap.data() };
                 if (userProfile.name) {
                   const lastId = localStorage.getItem("lastQueueId");
-                  if (lastId && (userProfile.joinedQueues || []).includes(lastId)) {
-                      await enterQueue(lastId);
-                  } else { 
-                      showScreen("queueSelection"); 
-                      renderQueueList(); 
-                  }
+                  if (lastId && (userProfile.joinedQueues || []).includes(lastId)) { await enterQueue(lastId); } 
+                  else { showScreen("queueSelection"); renderQueueList(); }
                 } else openProfileModal();
               } else {
                 const data = { email: user.email, role: SUPER_ADMIN_UID.includes(user.uid) ? "superadmin" : "user", joinedQueues: [], phone: pendingRegistrationPhone };
@@ -515,83 +476,51 @@
                 pendingRegistrationPhone = "";
                 openProfileModal();
               }
-            } else {
-                showScreen("auth");
-            }
-        } catch (err) {
-            console.error("Erro inicialização:", err);
-            showScreen("auth");
-        } finally {
-            if(el("loading-section")) el("loading-section").style.display = "none";
-        }
+            } else { showScreen("auth"); }
+        } catch (err) { showScreen("auth"); } finally { if(el("loading-section")) el("loading-section").style.display = "none"; }
       });
 
       async function enterQueue(id) {
         try {
             el("loading-section").style.display = "flex";
             const snap = await getDoc(doc(db, "queues", id));
-            if (!snap.exists()) {
-                showToast("Fila não encontrada.", "error");
-                showScreen("queueSelection");
-                return;
-            }
+            if (!snap.exists()) { showToast("Fila não encontrada.", "error"); showScreen("queueSelection"); return; }
             currentQueueId = id; currentQueueSettings = snap.data();
             await checkDailyReset(id, currentQueueSettings);
             localStorage.setItem("lastQueueId", id);
             el("header-queue-name").textContent = currentQueueSettings.name;
             showScreen("main");
-            
             if (unsubMembers) unsubMembers(); if (unsubSettings) unsubSettings(); 
-
             unsubMembers = onSnapshot(query(collection(db, "queues", id, "members"), orderBy("timestamp")), (s) => {
               currentQueueMembers = s.docs.map(d => ({...d.data(), uid: d.id}));
               renderQueueView(currentQueueMembers);
               updatePeriodicUI(getFormattedTime());
             });
-
             unsubSettings = onSnapshot(doc(db, "queues", id), (s) => { 
               if(s.exists()) { currentQueueSettings = s.data(); updatePeriodicUI(getFormattedTime()); }
             });
-
             const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "U";
             el("header-user-avatar").src = userProfile?.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${initial}`;
-            
-            if (userProfile.role === "superadmin") { 
-                el("super-admin-panel").style.display = "block";
-                el("queueOpenTime").value = currentQueueSettings.openTime || ""; 
-                el("queueCloseTime").value = currentQueueSettings.closeTime || ""; 
-            } else { el("super-admin-panel").style.display = "none"; }
-
-            if (userProfile.role === "driver") { el("driver-panel").style.display = "block"; } 
-            else { el("driver-panel").style.display = "none"; }
-
-        } catch(e) {
-            showToast("Falha ao abrir", "error");
-            showScreen("queueSelection");
-        } finally {
-            if(el("loading-section")) el("loading-section").style.display = "none";
-        }
+            if (userProfile.role === "superadmin") { el("super-admin-panel").style.display = "block"; el("queueOpenTime").value = currentQueueSettings.openTime || ""; el("queueCloseTime").value = currentQueueSettings.closeTime || ""; } 
+            else el("super-admin-panel").style.display = "none";
+            if (userProfile.role === "driver") el("driver-panel").style.display = "block"; else el("driver-panel").style.display = "none";
+        } catch(e) { showScreen("queueSelection"); } finally { if(el("loading-section")) el("loading-section").style.display = "none"; }
       }
 
-      // Função que controla a lógica de horário e mostra o botão Voador
       function updatePeriodicUI(brt) {
         if (!currentQueueSettings || currentQueueId === null || el("main-content").style.display === "none") {
             if(el("random-join-btn")) el("random-join-btn").classList.add("hidden");
             return;
         }
-        
         let isOpen = false;
         const card = el("queue-status-card"), msg = el("queue-status-message");
-
         if (!currentQueueSettings.openTime || !currentQueueSettings.closeTime) {
-            msg.textContent = "Agendamento pendente.";
-            card.className = "text-center p-4 rounded-2xl border border-slate-700 text-slate-400";
+            msg.textContent = "Agendamento pendente."; card.className = "text-center p-4 rounded-2xl border border-slate-700 text-slate-400";
         } else {
             const currentMinutes = brt.hour * 60 + brt.minute;
             const [oh, om] = currentQueueSettings.openTime.split(":").map(Number);
             const [ch, cm] = currentQueueSettings.closeTime.split(":").map(Number);
             const openMinutes = oh * 60 + om; const closeMinutes = ch * 60 + cm;
-
             if (currentMinutes < openMinutes) {
                 msg.textContent = `Fila fechada. Abre às ${currentQueueSettings.openTime}`;
                 card.className = "text-center p-4 rounded-2xl bg-[#0f172a] text-slate-300";
@@ -604,97 +533,38 @@
                 card.className = "text-center p-4 rounded-2xl bg-[#0f172a] text-red-400 border border-red-500/30";
             }
         }
-
-        const idx = currentQueueMembers.findIndex(m => m.uid === currentUser?.uid);
-        const isIn = idx !== -1;
+        const isIn = currentQueueMembers.some(m => m.uid === currentUser?.uid);
         const joinBtn = el("random-join-btn");
-
-        if (!isIn && isOpen) {
-            if (joinBtn.classList.contains("hidden")) {
-                joinBtn.classList.remove("hidden");
-                placeRandomButton(); // Coloca o botão num lugar aleatório na primeira vez que abre
-            }
-        } else { 
-            joinBtn.classList.add("hidden"); 
-        }
-      }
-
-      // Função de Mover (Admin - Imagem 3 - Setas)
-      async function handleMoveInQueue(uid, direction) {
-        const queue = [...currentQueueMembers];
-        const userIndex = queue.findIndex(u => u.uid === uid);
-        if (userIndex === -1) return;
-        let swapIndex;
-        if (direction === "up" && userIndex > 0) swapIndex = userIndex - 1;
-        else if (direction === "down" && userIndex < queue.length - 1) swapIndex = userIndex + 1;
-        else return;
-
-        const userToMove = queue[userIndex];
-        const userToSwapWith = queue[swapIndex];
-        const batch = writeBatch(db);
-        batch.update(doc(db, "queues", currentQueueId, "members", userToMove.uid), { timestamp: userToSwapWith.timestamp });
-        batch.update(doc(db, "queues", currentQueueId, "members", userToSwapWith.uid), { timestamp: userToMove.timestamp });
-
-        try { await batch.commit(); } catch(e) {}
+        if (!isIn && isOpen) { if (joinBtn.classList.contains("hidden")) { joinBtn.classList.remove("hidden"); placeRandomButton(); } } 
+        else joinBtn.classList.add("hidden");
       }
 
       function renderQueueView(members) {
         const idx = members.findIndex(m => m.uid === currentUser.uid);
-        const isIn = idx !== -1;
-        el("user-position").textContent = isIn ? idx + 1 : "-";
+        el("user-position").textContent = idx !== -1 ? idx + 1 : "-";
         el("total-in-queue").textContent = members.length;
-        
-        if (isIn) {
-          el("header-leave-queue-btn").style.display = "block";
-        } else {
-          el("header-leave-queue-btn").style.display = "none";
-        }
-
-        // DESIGN DA LISTA (Print 3 - fundo igual cartão)
+        el("header-leave-queue-btn").style.display = idx !== -1 ? "block" : "none";
         el("queue-list").innerHTML = members.length === 0 
           ? `<div class="text-center text-slate-500 py-8 font-medium">A fila está vazia.</div>` 
           : members.map((m, i) => {
           const avatar = m.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${m.name ? m.name.charAt(0).toUpperCase() : "U"}`;
           const borderClass = m.uid === currentUser.uid ? 'border border-indigo-500 shadow-md' : 'border border-transparent';
-          
           let adminControlsHTML = "";
           if (userProfile.role === "superadmin" && m.uid !== currentUser.uid) {
-            adminControlsHTML = `
-                <div class="flex-shrink-0 flex gap-2 items-center ml-2">
-                    <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="up">▲</button>
-                    <button class="delete-queue-btn bg-red-500/20 w-9 h-9 rounded-xl text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-name="${m.name}">✕</button>
-                    <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="down">▼</button>
-                </div>`;
+            adminControlsHTML = `<div class="flex-shrink-0 flex gap-2 items-center ml-2">
+                <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="up">▲</button>
+                <button class="delete-queue-btn bg-red-500/20 w-9 h-9 rounded-xl text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-name="${m.name}">✕</button>
+                <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="down">▼</button>
+            </div>`;
           }
-
-          return `
-          <div class="card-style flex items-center gap-3 ${borderClass} mb-3 py-3 px-4">
+          return `<div class="card-style flex items-center gap-3 ${borderClass} mb-3 py-3 px-4">
             <div class="bg-[#0f172a] w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 text-white">${i+1}</div>
             <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-700">
-            <div class="flex-grow min-w-0">
-              <p class="font-bold text-sm text-white truncate">${m.name}</p>
-              <p class="text-xs text-slate-400 truncate">${m.course}</p>
-            </div>
+            <div class="flex-grow min-w-0"><p class="font-bold text-sm text-white truncate">${m.name}</p><p class="text-xs text-slate-400 truncate">${m.course}</p></div>
             ${adminControlsHTML}
-          </div>
-        `}).join("");
-
-        document.querySelectorAll('.delete-queue-btn').forEach(b => {
-          b.addEventListener("click", (e) => {
-            e.preventDefault();
-            const memberName = b.dataset.name;
-            showConfirmModal("Remover da Fila", `Deseja remover ${memberName} da fila?`, async () => {
-                await deleteDoc(doc(db, "queues", currentQueueId, "members", b.dataset.uid));
-                await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `Admin removeu ${memberName}.`, type: "system", timestamp: serverTimestamp() });
-            });
-          });
-        });
-
-        document.querySelectorAll('.move-queue-btn').forEach(b => {
-          b.addEventListener("click", (e) => {
-            e.preventDefault(); handleMoveInQueue(b.dataset.uid, b.dataset.direction);
-          });
-        });
+          </div>`}).join("");
+        document.querySelectorAll('.delete-queue-btn').forEach(b => { b.addEventListener("click", () => { showConfirmModal("Remover da Fila", `Deseja remover ${b.dataset.name}?`, async () => { await deleteDoc(doc(db, "queues", currentQueueId, "members", b.dataset.uid)); await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `Admin removeu ${b.dataset.name}.`, type: "system", timestamp: serverTimestamp() }); }); }); });
+        document.querySelectorAll('.move-queue-btn').forEach(b => { b.addEventListener("click", () => { handleMoveInQueue(b.dataset.uid, b.dataset.direction); }); });
       }
 
       async function renderQueueList() {
@@ -711,76 +581,46 @@
 
       function switchAuthTab(tabName) {
         const loginForm = el("login-form"), registerForm = el("register-form"), btnLogin = el("show-login-tab"), btnRegister = el("show-register-tab");
-        btnLogin.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors";
-        btnRegister.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors";
-        if (tabName === "login") {
-            btnLogin.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10";
-            registerForm.style.display = "none"; loginForm.style.display = "block";
-        } else {
-            btnRegister.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10";
-            loginForm.style.display = "none"; registerForm.style.display = "block";
-        }
+        btnLogin.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors"; btnRegister.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors";
+        if (tabName === "login") { btnLogin.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10"; registerForm.style.display = "none"; loginForm.style.display = "block"; } 
+        else { btnRegister.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10"; loginForm.style.display = "none"; registerForm.style.display = "block"; }
       }
 
-      // --- EVENTOS DE CLICK PROTEGIDOS ---
-      bindClick("login-btn", (e) => { 
-          e.preventDefault(); el("loading-section").style.display = "flex";
-          signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => { showToast("E-mail ou senha incorretos", "error"); el("loading-section").style.display = "none"; }); 
-      });
-      
+      bindClick("login-btn", (e) => { e.preventDefault(); el("loading-section").style.display = "flex"; signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => { showToast("E-mail ou senha incorretos", "error"); el("loading-section").style.display = "none"; }); });
       bindClick("register-btn", async (e) => {
-        e.preventDefault();
-        const email = el("registerEmail").value.trim(), pwd = el("registerPassword").value, pwdConfirm = el("registerPasswordConfirm").value, phone = el("registerPhone").value.trim();
+        e.preventDefault(); const email = el("registerEmail").value.trim(), pwd = el("registerPassword").value, pwdConfirm = el("registerPasswordConfirm").value, phone = el("registerPhone").value.trim();
         if (pwd !== pwdConfirm) { showToast("As senhas não coincidem.", "error"); return; }
         if (pwd.length < 6) { showToast("A senha deve ter 6 caracteres.", "error"); return; }
         pendingRegistrationPhone = phone; el("loading-section").style.display = "flex";
-        try { await createUserWithEmailAndPassword(auth, email, pwd); } catch (error) { showToast("Erro ao criar conta. Email em uso?", "error"); el("loading-section").style.display = "none"; }
+        try { await createUserWithEmailAndPassword(auth, email, pwd); } catch (error) { showToast("Erro ao criar conta.", "error"); el("loading-section").style.display = "none"; }
       });
       
-      // Clique no Botão Voador!
       bindClick("random-join-btn", async (e) => {
         e.preventDefault();
-        
-        if (!currentQueueSettings.openTime || !currentQueueSettings.closeTime) { showToast("Fila sem horário.", "error"); return; }
-
         const brt = getFormattedTime();
-        if (!currentQueueSettings || !brt) return;
-        
+        if (!currentQueueSettings.openTime || !currentQueueSettings.closeTime) { showToast("Fila sem horário.", "error"); return; }
         const currentMinutes = brt.hour * 60 + brt.minute;
         const [oh, om] = currentQueueSettings.openTime.split(":").map(Number);
         const [ch, cm] = currentQueueSettings.closeTime.split(":").map(Number);
         const openMinutes = oh * 60 + om; const closeMinutes = ch * 60 + cm;
-        
-        if (currentMinutes < openMinutes || currentMinutes >= closeMinutes) { 
-            showToast("A fila está fechada!", "error"); return; 
-        }
-
+        if (currentMinutes < openMinutes || currentMinutes >= closeMinutes) { showToast("A fila está fechada!", "error"); return; }
         el("loading-section").style.display = "flex";
         try {
-            await setDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), {
-              name: userProfile.name, course: userProfile.course, photoUrl: userProfile.photoUrl || "", uid: currentUser.uid, timestamp: serverTimestamp()
-            });
+            await setDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { name: userProfile.name, course: userProfile.course, photoUrl: userProfile.photoUrl || "", uid: currentUser.uid, timestamp: serverTimestamp() });
             await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `${userProfile.name} entrou na fila!`, type: "system", timestamp: serverTimestamp() });
         } catch(err) { showToast("Erro ao entrar", "error"); } finally { el("loading-section").style.display = "none"; }
       });
 
       bindClick("header-leave-queue-btn", (e) => {
-        e.preventDefault();
-        showConfirmModal("Sair da Fila", "Tem certeza que deseja sair? Perderá a sua posição.", async () => {
+        e.preventDefault(); showConfirmModal("Sair da Fila", "Tem certeza que deseja sair?", async () => {
             el("loading-section").style.display = "flex";
-            try {
-                await deleteDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid));
-                await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `${userProfile.name} saiu da fila.`, type: "system", timestamp: serverTimestamp() });
-                showToast("Você saiu da fila.", "success");
-            } catch(e) {} finally { el("loading-section").style.display = "none"; }
+            try { await deleteDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid)); await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `${userProfile.name} saiu da fila.`, type: "system", timestamp: serverTimestamp() }); showToast("Você saiu da fila.", "success"); } catch(e) {} finally { el("loading-section").style.display = "none"; }
         });
       });
 
       bindClick("save-profile-btn", async (e) => {
-        e.preventDefault();
-        const name = el("userName").value.trim(), course = el("userCourse").value.trim(), phone = el("userProfilePhone").value.trim();
+        e.preventDefault(); const name = el("userName").value.trim(), course = el("userCourse").value.trim(), phone = el("userProfilePhone").value.trim();
         if(!name || !course) { showToast("Nome e Curso são obrigatórios", "error"); return; }
-        
         el("loading-section").style.display = "flex";
         try {
             const photo = tempPhotoDataUrl || userProfile?.photoUrl || `https://placehold.co/200x200/6366f1/ffffff?text=${name.charAt(0).toUpperCase()}`;
@@ -792,21 +632,18 @@
                if (memberSnap.exists()) await updateDoc(memberRef, { name, course, photoUrl: photo });
                el("header-user-avatar").src = photo; el("profile-overlay").style.display = "none";
             } else { el("profile-overlay").style.display = "none"; showScreen("queueSelection"); renderQueueList(); }
-            showToast("Perfil salvo com sucesso!", "success");
+            showToast("Perfil salvo!", "success");
         } catch(e) { showToast("Erro ao salvar", "error"); } finally { el("loading-section").style.display = "none"; }
       });
 
-      bindClick("close-profile-btn", (e) => { e.preventDefault(); if (!userProfile?.name) { showToast("Guarde o perfil primeiro.", "error"); } else { el("profile-overlay").style.display = "none"; } });
-
-      bindClick("main-logout-btn", (e) => { e.preventDefault(); localStorage.removeItem("lastQueueId"); signOut(auth).then(() => { showScreen("auth"); }); });
-      bindClick("back-to-selection-btn", (e) => { e.preventDefault(); localStorage.removeItem("lastQueueId"); showScreen("queueSelection"); renderQueueList(); });
-      bindClick("show-login-tab", (e) => { e.preventDefault(); switchAuthTab("login"); });
-      bindClick("show-register-tab", (e) => { e.preventDefault(); switchAuthTab("register"); });
-      bindClick("join-new-queue-btn", (e) => { e.preventDefault(); el("join-queue-modal").style.display = "flex"; });
-      bindClick("cancel-join-queue", (e) => { e.preventDefault(); el("join-queue-modal").style.display = "none"; });
-      
-      bindClick("confirm-join-queue", async (e) => {
-          e.preventDefault(); const code = el("queue-code-input").value.trim().toUpperCase(); if(!code) return;
+      bindClick("close-profile-btn", () => { if (!userProfile?.name) showToast("Preencha o perfil.", "error"); else el("profile-overlay").style.display = "none"; });
+      bindClick("main-logout-btn", () => { localStorage.removeItem("lastQueueId"); signOut(auth).then(() => { showScreen("auth"); }); });
+      bindClick("back-to-selection-btn", () => { localStorage.removeItem("lastQueueId"); showScreen("queueSelection"); renderQueueList(); });
+      bindClick("show-login-tab", () => switchAuthTab("login")); bindClick("show-register-tab", () => switchAuthTab("register"));
+      bindClick("join-new-queue-btn", () => el("join-queue-modal").style.display = "flex");
+      bindClick("cancel-join-queue", () => el("join-queue-modal").style.display = "none");
+      bindClick("confirm-join-queue", async () => {
+          const code = el("queue-code-input").value.trim().toUpperCase(); if(!code) return;
           el("loading-section").style.display = "flex";
           try {
               const q = query(collection(db, "queues"), where("code", "==", code)); const snap = await getDocs(q);
@@ -814,20 +651,15 @@
                   const id = snap.docs[0].id; const joined = userProfile.joinedQueues || [];
                   if (!joined.includes(id)) { joined.push(id); await updateDoc(doc(db, "users", currentUser.uid), { joinedQueues: joined }); }
                   el("join-queue-modal").style.display = "none"; renderQueueList(); showToast("Adicionado!", "success");
-              } else { showToast("Código inválido", "error"); }
+              } else showToast("Código inválido", "error");
           } catch(err) { showToast("Erro ao entrar", "error"); } finally { el("loading-section").style.display = "none"; }
       });
-      
-      bindClick("edit-profile-btn", (e) => { e.preventDefault(); openProfileModal(); });
-      bindClick("save-schedule-btn", (e) => { e.preventDefault(); updateDoc(doc(db, "queues", currentQueueId), { openTime: el("queueOpenTime").value, closeTime: el("queueCloseTime").value }).then(() => showToast("Horários salvos!", "success")); });
-
-      bindClick("restart-queue-btn", (e) => {
-          e.preventDefault();
-          showConfirmModal("Zerar Fila", "Certeza que deseja esvaziar a fila agora?", async () => {
+      bindClick("edit-profile-btn", () => openProfileModal());
+      bindClick("save-schedule-btn", () => updateDoc(doc(db, "queues", currentQueueId), { openTime: el("queueOpenTime").value, closeTime: el("queueCloseTime").value }).then(() => showToast("Horários salvos!", "success")));
+      bindClick("restart-queue-btn", () => { showConfirmModal("Zerar Fila", "Deseja esvaziar a fila?", async () => {
               el("loading-section").style.display = "flex";
               try {
                 const batch = writeBatch(db); const membersSnap = await getDocs(collection(db, "queues", currentQueueId, "members"));
-                if (membersSnap.empty) { showToast("Fila já vazia.", "info"); el("loading-section").style.display = "none"; return; }
                 membersSnap.docs.forEach(d => batch.delete(d.ref)); await batch.commit();
                 await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `Admin limpou a fila.`, type: "system", timestamp: serverTimestamp() });
               } catch (error) {} finally { el("loading-section").style.display = "none"; }
@@ -836,3 +668,4 @@
     </script>
   </body>
 </html>
+
