@@ -151,9 +151,10 @@
       <div id="auth-overlay" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4">
         <div id="auth-section" class="w-full glass-effect rounded-3xl p-6 shadow-2xl space-y-4 fade-in-up relative overflow-hidden">
           
+          <!-- Abas Superiores -->
           <div id="auth-tabs" class="flex relative mb-6">
-            <button id="show-login-tab" class="flex-1 pb-3 text-center font-bold text-primary-500 border-b-2 border-primary-500 transition-colors duration-300 z-10">Entrar</button>
-            <button id="show-register-tab" class="flex-1 pb-3 text-center font-bold text-slate-400 border-b-2 border-transparent transition-colors duration-300 z-10">Registrar</button>
+            <button type="button" id="show-login-tab" class="flex-1 pb-3 text-center font-bold text-primary-500 border-b-2 border-primary-500 transition-colors duration-300 z-10">Entrar</button>
+            <button type="button" id="show-register-tab" class="flex-1 pb-3 text-center font-bold text-slate-400 border-b-2 border-transparent transition-colors duration-300 z-10">Registrar</button>
             <div class="absolute bottom-0 left-0 w-full h-[2px] bg-slate-200 dark:bg-slate-700"></div>
           </div>
 
@@ -165,8 +166,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
             </div>
-            <button id="login-btn" class="w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Entrar</button>
-            <button id="forgot-password-link" class="w-full text-center mt-3 text-sm text-primary-500 hover:underline">Esqueceu a senha?</button>
+            <button type="button" id="login-btn" class="w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Entrar</button>
           </div>
 
           <div id="register-form" class="hidden">
@@ -184,7 +184,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
             </div>
-            <button id="register-btn" class="w-full bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Criar Conta</button>
+            <button type="button" id="register-btn" class="w-full bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Criar Conta</button>
           </div>
           <p id="auth-error" class="text-red-500 text-center text-sm min-h-[20px] mt-2"></p>
         </div>
@@ -195,9 +195,9 @@
         <h1 class="text-3xl font-bold text-center mt-6 text-slate-900 dark:text-white">Minhas Filas</h1>
         <div id="queues-list" class="space-y-3"></div>
         <div class="space-y-3 pt-4">
-          <button id="join-new-queue-btn" class="w-full bg-slate-700 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">Entrar por Código</button>
-          <button id="create-new-queue-btn" class="hidden w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl">Criar Fila</button>
-          <button id="main-logout-btn" class="w-full text-center text-sm text-red-500 font-semibold hover:underline p-2">Sair da Conta</button>
+          <button type="button" id="join-new-queue-btn" class="w-full bg-slate-700 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">Entrar por Código</button>
+          <button type="button" id="create-new-queue-btn" class="hidden w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl">Criar Fila</button>
+          <button type="button" id="main-logout-btn" class="w-full text-center text-sm text-red-500 font-semibold hover:underline p-2">Sair da Conta</button>
         </div>
       </div>
 
@@ -205,16 +205,16 @@
       <div id="main-content" class="hidden space-y-6 fade-in-up">
         <header class="flex justify-between items-center relative z-20">
           <div>
-            <button id="back-to-selection-btn" class="flex items-center gap-1 text-sm text-slate-500 hover:text-primary-500 transition-colors mb-1">
+            <button type="button" id="back-to-selection-btn" class="flex items-center gap-1 text-sm text-slate-500 hover:text-primary-500 transition-colors mb-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
               Voltar
             </button>
             <h1 id="header-queue-name" class="text-2xl font-bold text-slate-900 dark:text-white">Fila</h1>
           </div>
           <div class="flex items-center gap-3">
-            <button id="edit-profile-btn" class="text-slate-500 hover:text-primary-500 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+            <button type="button" id="edit-profile-btn" class="text-slate-500 hover:text-primary-500 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
             <img id="header-user-avatar" class="w-12 h-12 rounded-full object-cover border-2 border-primary-500/50 shadow-sm" />
-            <button id="header-leave-queue-btn" class="hidden bg-red-500 text-white font-semibold py-2 px-4 rounded-xl text-sm hover:bg-red-600 transition-colors relative z-10">Sair</button>
+            <button type="button" id="header-leave-queue-btn" class="hidden bg-red-500 text-white font-semibold py-2 px-4 rounded-xl text-sm hover:bg-red-600 transition-colors relative z-10">Sair</button>
           </div>
         </header>
 
@@ -225,10 +225,10 @@
             <input type="time" id="queueOpenTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
             <input type="time" id="queueCloseTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
-          <button id="save-schedule-btn" class="w-full bg-blue-500 text-white py-2 rounded-xl text-sm font-bold hover:bg-blue-600 transition-colors">Salvar Horários</button>
+          <button type="button" id="save-schedule-btn" class="w-full bg-blue-500 text-white py-2 rounded-xl text-sm font-bold hover:bg-blue-600 transition-colors">Salvar Horários</button>
           <div class="grid grid-cols-2 gap-2">
-            <button id="restart-queue-btn" class="bg-red-500 text-white py-2 rounded-xl text-sm hover:bg-red-600 transition-colors font-bold">Zerar Fila</button>
-            <button id="view-logs-btn" class="bg-slate-500 text-white py-2 rounded-xl text-sm hover:bg-slate-600 transition-colors font-bold">Histórico</button>
+            <button type="button" id="restart-queue-btn" class="bg-red-500 text-white py-2 rounded-xl text-sm hover:bg-red-600 transition-colors font-bold">Zerar Fila</button>
+            <button type="button" id="view-logs-btn" class="bg-slate-500 text-white py-2 rounded-xl text-sm hover:bg-slate-600 transition-colors font-bold">Histórico</button>
           </div>
         </div>
 
@@ -248,7 +248,6 @@
         <div id="chat-section" class="glass-effect p-4 rounded-2xl shadow-sm">
           <h3 class="text-lg font-bold text-center text-slate-800 dark:text-white mb-3">Chat da Fila</h3>
           <div id="chat-messages" class="h-72 overflow-y-auto space-y-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl mb-3 border border-slate-200 dark:border-transparent"></div>
-          
           <form id="chat-form" class="flex items-center gap-3 w-full">
             <input type="text" id="chat-input" placeholder="Digite uma mensagem..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" autocomplete="off" />
             <button type="submit" class="shrink-0 bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Enviar</button>
@@ -263,10 +262,9 @@
         <!-- Seção de Observação -->
         <div id="observation-section" class="hidden glass-effect p-4 rounded-2xl space-y-2 shadow-sm">
           <p class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Sua Observação</p>
-          
           <div class="flex items-center gap-3 w-full">
             <input type="text" id="userObservation" placeholder="Ex: Chego em 5 min..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" />
-            <button id="save-observation-btn" class="shrink-0 bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Salvar</button>
+            <button type="button" id="save-observation-btn" class="shrink-0 bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Salvar</button>
           </div>
         </div>
 
@@ -280,7 +278,7 @@
       <!-- Botão Flutuante (Lugar Aleatório) -->
       <div id="bottom-bar" class="hidden z-30">
         <div class="max-w-md mx-auto flex justify-center">
-          <button id="join-leave-btn" class="font-bold py-4 px-8 rounded-2xl shadow-xl text-lg"></button>
+          <button type="button" id="join-leave-btn" class="font-bold py-4 px-8 rounded-2xl shadow-xl text-lg"></button>
         </div>
       </div>
     </div>
@@ -308,11 +306,11 @@
               <p class="text-xs font-bold text-center text-slate-600 dark:text-slate-400 uppercase tracking-widest">Aparência do App</p>
               
               <div class="flex justify-center gap-4">
-                <button class="theme-btn w-8 h-8 rounded-full bg-[#6366f1] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-indigo"></button>
-                <button class="theme-btn w-8 h-8 rounded-full bg-[#10b981] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-emerald"></button>
-                <button class="theme-btn w-8 h-8 rounded-full bg-[#f43f5e] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-rose"></button>
-                <button class="theme-btn w-8 h-8 rounded-full bg-[#f59e0b] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-amber"></button>
-                <button class="theme-btn w-8 h-8 rounded-full bg-[#8b5cf6] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-violet"></button>
+                <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#6366f1] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-indigo"></button>
+                <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#10b981] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-emerald"></button>
+                <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#f43f5e] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-rose"></button>
+                <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#f59e0b] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-amber"></button>
+                <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#8b5cf6] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-violet"></button>
               </div>
 
               <div class="flex justify-center items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
@@ -326,8 +324,8 @@
             </div>
 
             <div class="space-y-2 pt-2">
-              <button id="save-profile-btn" class="w-full bg-primary-500 text-white font-bold py-3 rounded-xl hover:bg-primary-600 transition-colors">Salvar Alterações</button>
-              <button id="close-profile-btn" class="w-full text-slate-600 dark:text-slate-400 font-medium text-sm hover:underline py-2">Fechar</button>
+              <button type="button" id="save-profile-btn" class="w-full bg-primary-500 text-white font-bold py-3 rounded-xl hover:bg-primary-600 transition-colors">Salvar Alterações</button>
+              <button type="button" id="close-profile-btn" class="w-full text-slate-600 dark:text-slate-400 font-medium text-sm hover:underline py-2">Fechar</button>
             </div>
         </div>
     </div>
@@ -337,7 +335,7 @@
         <div class="w-full max-w-lg glass-effect rounded-3xl p-6 space-y-4 fade-in-up my-auto flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center shrink-0 pb-2 border-b border-slate-200 dark:border-slate-700/50">
                 <h2 class="text-xl font-bold text-slate-900 dark:text-white">Histórico da Fila</h2>
-                <button id="close-logs-modal" class="text-slate-500 hover:text-primary-500 transition-colors">
+                <button type="button" id="close-logs-modal" class="text-slate-500 hover:text-primary-500 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
@@ -352,8 +350,8 @@
         <h3 class="text-lg font-bold text-center text-slate-900 dark:text-white">Entrar numa Fila</h3>
         <input type="text" id="queue-code-input" placeholder="CÓDIGO DA FILA" class="w-full text-center tracking-widest font-mono uppercase bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
         <div class="grid grid-cols-2 gap-2">
-          <button id="cancel-join-queue" class="bg-slate-600 text-white font-semibold py-3 rounded-xl hover:bg-slate-700 transition-colors">Cancelar</button>
-          <button id="confirm-join-queue" class="bg-primary-500 text-white font-semibold py-3 rounded-xl hover:bg-primary-600 transition-colors">Entrar</button>
+          <button type="button" id="cancel-join-queue" class="bg-slate-600 text-white font-semibold py-3 rounded-xl hover:bg-slate-700 transition-colors">Cancelar</button>
+          <button type="button" id="confirm-join-queue" class="bg-primary-500 text-white font-semibold py-3 rounded-xl hover:bg-primary-600 transition-colors">Entrar</button>
         </div>
       </div>
     </div>
@@ -364,8 +362,8 @@
         <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="confirm-modal-title">Atenção</h3>
         <p class="text-sm text-slate-600 dark:text-slate-300" id="confirm-modal-text">Tem certeza que deseja continuar?</p>
         <div class="grid grid-cols-2 gap-3 pt-2">
-          <button id="cancel-confirm-btn" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold py-3 rounded-xl transition-colors">Cancelar</button>
-          <button id="accept-confirm-btn" class="bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition-colors">Confirmar</button>
+          <button type="button" id="cancel-confirm-btn" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold py-3 rounded-xl transition-colors">Cancelar</button>
+          <button type="button" id="accept-confirm-btn" class="bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition-colors">Confirmar</button>
         </div>
       </div>
     </div>
@@ -423,13 +421,15 @@
         const newCancelBtn = cancelBtn.cloneNode(true);
         cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
 
-        newAcceptBtn.addEventListener("click", () => {
+        newAcceptBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             el("confirm-modal").classList.add("hidden");
             el("confirm-modal").classList.remove("flex");
             if (onConfirm) onConfirm();
         });
 
-        newCancelBtn.addEventListener("click", () => {
+        newCancelBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             el("confirm-modal").classList.add("hidden");
             el("confirm-modal").classList.remove("flex");
         });
@@ -440,7 +440,8 @@
 
       // --- Mostrar/Esconder Senhas ---
       document.querySelectorAll('.toggle-password-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
             const targetId = this.getAttribute('data-target');
             const input = el(targetId);
             const isPassword = input.getAttribute('type') === 'password';
@@ -517,9 +518,9 @@
         }
       }
 
-      el("profile-pic-container").onclick = () => el("profile-pic-input").click();
+      el("profile-pic-container").addEventListener("click", () => el("profile-pic-input").click());
 
-      el("profile-pic-input").onchange = (e) => {
+      el("profile-pic-input").addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -540,7 +541,7 @@
           img.src = event.target.result;
         };
         reader.readAsDataURL(file);
-      };
+      });
 
       function openProfileModal() {
         tempPhotoDataUrl = null;
@@ -691,12 +692,13 @@
               <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</p>
               <p class="text-xs text-slate-600 dark:text-slate-400 truncate">${m.course} ${m.observation ? `<br><span class="italic text-primary-600 dark:text-primary-400 font-medium">💬 "${m.observation}"</span>` : ''}</p>
             </div>
-            ${userProfile.role === 'superadmin' ? `<button class="text-red-500 hover:scale-110 delete-btn flex-shrink-0 transition-transform p-2 bg-red-100 dark:bg-red-500/20 rounded-lg" data-uid="${m.uid}" data-name="${m.name}">✕</button>` : ''}
+            ${userProfile.role === 'superadmin' ? `<button type="button" class="text-red-500 hover:scale-110 delete-btn flex-shrink-0 transition-transform p-2 bg-red-100 dark:bg-red-500/20 rounded-lg" data-uid="${m.uid}" data-name="${m.name}">✕</button>` : ''}
           </div>
         `}).join("");
 
         document.querySelectorAll('.delete-btn').forEach(b => {
-          b.onclick = () => {
+          b.addEventListener("click", (e) => {
+            e.preventDefault();
             const memberName = b.dataset.name;
             showConfirmModal(
               "Remover da Fila",
@@ -711,7 +713,7 @@
                 showToast(`${memberName} removido(a).`, "success");
               }
             );
-          };
+          });
         });
         
         el("observation-section").classList.toggle("hidden", !isIn);
@@ -777,15 +779,24 @@
         }).join("");
       }
 
-      el("view-logs-btn").onclick = showLogsModal;
-      el("close-logs-modal").onclick = () => {
+      el("view-logs-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          showLogsModal();
+      });
+
+      el("close-logs-modal").addEventListener("click", (e) => {
+          e.preventDefault();
           el("logs-modal").classList.add("hidden");
           el("logs-modal").classList.remove("flex");
-      };
+      });
 
-      el("login-btn").onclick = () => signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => showToast("E-mail ou senha incorretos", "error"));
+      el("login-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => showToast("E-mail ou senha incorretos", "error"));
+      });
       
-      el("register-btn").onclick = async () => {
+      el("register-btn").addEventListener("click", async (e) => {
+        e.preventDefault();
         const email = el("registerEmail").value.trim();
         const pwd = el("registerPassword").value;
         const pwdConfirm = el("registerPasswordConfirm").value;
@@ -794,9 +805,10 @@
         if (pwd.length < 6) { showToast("A senha deve ter pelo menos 6 caracteres.", "error"); return; }
         pendingRegistrationPhone = phone;
         try { await createUserWithEmailAndPassword(auth, email, pwd); } catch (error) { showToast("Erro ao criar conta. O E-mail já pode estar em uso.", "error"); }
-      };
+      });
       
-      el("join-leave-btn").onclick = async () => {
+      el("join-leave-btn").addEventListener("click", async (e) => {
+        e.preventDefault();
         const isIn = currentQueueMembers.some(m => m.uid === currentUser.uid);
         if (isIn) return; 
 
@@ -818,7 +830,7 @@
           type: "system", 
           timestamp: serverTimestamp() 
         });
-      };
+      });
 
       el("header-leave-queue-btn").addEventListener("click", (e) => {
         e.preventDefault();
@@ -826,24 +838,13 @@
           "Sair da Fila",
           "Tem certeza que deseja sair da fila? Você perderá sua posição atual.",
           async () => {
-            try {
-                await deleteDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid));
-                buttonWasMoved = false;
-                await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
-                    text: `${userProfile.name} saiu da fila.`, 
-                    type: "system", 
-                    timestamp: serverTimestamp() 
-                });
-                showToast("Você saiu da fila.", "success");
-            } catch (err) {
-                console.error(err);
-                showToast("Erro ao sair da fila.", "error");
-            }
+            await deleteDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid));
+            buttonWasMoved = false; // Reset da posição para a próxima vez
           }
         );
       });
 
-      el("chat-form").onsubmit = async (e) => {
+      el("chat-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const text = el("chat-input").value;
         if(!text) return;
@@ -855,11 +856,15 @@
           uid: currentUser.uid, 
           timestamp: serverTimestamp() 
         });
-      };
+      });
 
-      el("save-observation-btn").onclick = () => updateDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { observation: el("userObservation").value });
+      el("save-observation-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          updateDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { observation: el("userObservation").value });
+      });
 
-      el("save-profile-btn").onclick = async () => {
+      el("save-profile-btn").addEventListener("click", async (e) => {
+        e.preventDefault();
         const name = el("userName").value.trim();
         const course = el("userCourse").value.trim();
         const phone = el("userProfilePhone").value.trim();
@@ -884,9 +889,10 @@
            renderQueueList();
         }
         showToast("Perfil salvo com sucesso!", "success");
-      };
+      });
 
-      el("main-logout-btn").onclick = () => {
+      el("main-logout-btn").addEventListener("click", (e) => {
+        e.preventDefault();
         localStorage.removeItem("lastQueueId");
         currentQueueId = null;
         currentQueueSettings = null;
@@ -896,9 +902,10 @@
         if (unsubChat) unsubChat();
 
         signOut(auth).then(() => { showScreen("auth"); });
-      };
+      });
 
-      el("back-to-selection-btn").onclick = () => { 
+      el("back-to-selection-btn").addEventListener("click", (e) => { 
+        e.preventDefault();
         localStorage.removeItem("lastQueueId");
         currentQueueId = null;
         currentQueueSettings = null;
@@ -909,7 +916,7 @@
         
         showScreen("queueSelection");
         renderQueueList();
-      };
+      });
 
       async function renderQueueList() {
         const list = el("queues-list"); list.innerHTML = "";
@@ -949,8 +956,8 @@
         }
       }
 
-      el("show-login-tab").onclick = () => switchAuthTab("login");
-      el("show-register-tab").onclick = () => switchAuthTab("register");
+      el("show-login-tab").addEventListener("click", (e) => { e.preventDefault(); switchAuthTab("login"); });
+      el("show-register-tab").addEventListener("click", (e) => { e.preventDefault(); switchAuthTab("register"); });
 
       function showScreen(s) {
         el("auth-overlay").classList.add("hidden"); 
@@ -973,17 +980,20 @@
         if(s === "queueSelection") el("queue-selection-screen").classList.remove("hidden");
       }
       
-      el("join-new-queue-btn").onclick = () => {
+      el("join-new-queue-btn").addEventListener("click", (e) => {
+          e.preventDefault();
           el("join-queue-modal").classList.remove("hidden");
           el("join-queue-modal").classList.add("flex");
-      };
+      });
       
-      el("cancel-join-queue").onclick = () => {
+      el("cancel-join-queue").addEventListener("click", (e) => {
+          e.preventDefault();
           el("join-queue-modal").classList.add("hidden");
           el("join-queue-modal").classList.remove("flex");
-      };
+      });
       
-      el("confirm-join-queue").onclick = async () => {
+      el("confirm-join-queue").addEventListener("click", async (e) => {
+          e.preventDefault();
           const code = el("queue-code-input").value.trim().toUpperCase();
           const q = query(collection(db, "queues"), where("code", "==", code));
           const snap = await getDocs(q);
@@ -998,20 +1008,59 @@
               el("join-queue-modal").classList.remove("flex");
               renderQueueList();
           } else showToast("Código inválido", "error");
-      };
+      });
       
-      el("edit-profile-btn").onclick = () => openProfileModal();
-      el("close-profile-btn").onclick = () => {
+      el("edit-profile-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          openProfileModal();
+      });
+      
+      el("close-profile-btn").addEventListener("click", (e) => {
+        e.preventDefault();
         if (!userProfile?.name) { showToast("Você precisa salvar seu perfil primeiro.", "error"); } 
         else { showScreen(currentQueueId ? "main" : "queueSelection"); }
-      };
+      });
       
-      el("save-schedule-btn").onclick = () => {
+      el("save-schedule-btn").addEventListener("click", (e) => {
+          e.preventDefault();
           updateDoc(doc(db, "queues", currentQueueId), {
               openTime: el("queueOpenTime").value,
               closeTime: el("queueCloseTime").value
           }).then(() => showToast("Horários atualizados!", "success"));
-      };
+      });
+
+      // --- Funcionalidade de Zerar Fila (Corrigida) ---
+      el("restart-queue-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          showConfirmModal(
+            "Zerar Fila",
+            "Tem certeza que deseja esvaziar a fila agora? Esta ação não pode ser desfeita.",
+            async () => {
+              try {
+                const batch = writeBatch(db);
+                const membersSnap = await getDocs(collection(db, "queues", currentQueueId, "members"));
+                
+                if (membersSnap.empty) {
+                    showToast("A fila já está vazia.", "info");
+                    return;
+                }
+
+                membersSnap.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+                
+                await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+                    text: `O Administrador limpou a fila.`, 
+                    type: "system", 
+                    timestamp: serverTimestamp() 
+                });
+                showToast("Fila zerada com sucesso!", "success");
+              } catch (error) {
+                console.error("Erro ao zerar a fila:", error);
+                showToast("Erro ao zerar fila.", "error");
+              }
+            }
+          );
+      });
 
     </script>
   </body>
