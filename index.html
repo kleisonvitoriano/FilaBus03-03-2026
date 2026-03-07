@@ -134,13 +134,14 @@
       <div class="blob blob-3"></div>
     </div>
 
-    <div id="app-container" class="container mx-auto max-w-md pb-28">
+    <!-- Ajustado pt-6 para que o layout flua naturalmente sem o relógio sobrepor -->
+    <div id="app-container" class="container mx-auto max-w-md pb-28 pt-6 px-4">
       <div id="toast"></div>
       
       <!-- Relógio Digital Sincronizado -->
-      <div id="global-clock-widget" class="fixed top-4 right-4 z-50 glass-effect px-4 py-2 rounded-2xl shadow-lg border border-primary-500/30">
+      <div id="global-clock-widget" class="hidden mx-auto mb-6 w-max glass-effect px-6 py-2 rounded-3xl shadow-lg border border-primary-500/30 flex-col items-center justify-center whitespace-nowrap backdrop-blur-md">
         <div class="text-[10px] uppercase tracking-widest text-primary-500 font-bold mb-0.5">Horário do Servidor</div>
-        <div id="server-clock-display" class="text-lg font-mono font-bold text-slate-900 dark:text-white">00:00:00</div>
+        <div id="server-clock-display" class="text-xl font-mono font-black text-slate-900 dark:text-white tracking-wider">00:00:00</div>
       </div>
 
       <div id="loading-section" class="flex items-center justify-center h-screen">
@@ -159,10 +160,10 @@
 
           <!-- Formulário de Login -->
           <div id="login-form" class="fade-in-up">
-            <input type="email" id="loginEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
+            <input type="email" id="loginEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
             
             <div class="relative mb-4 w-full">
-              <input type="password" id="loginPassword" placeholder="Senha" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="current-password" />
+              <input type="password" id="loginPassword" placeholder="Senha" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="current-password" />
               <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="loginPassword">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
@@ -174,19 +175,19 @@
 
           <!-- Formulário de Registro -->
           <div id="register-form" class="hidden">
-            <input type="email" id="registerEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
+            <input type="email" id="registerEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
             
-            <input type="tel" id="registerPhone" placeholder="Celular (Opcional)" class="mb-4 w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="tel" />
+            <input type="tel" id="registerPhone" placeholder="Celular (Opcional)" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="tel" />
             
             <div class="relative mb-4 w-full">
-              <input type="password" id="registerPassword" placeholder="Senha (mín. 6)" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
+              <input type="password" id="registerPassword" placeholder="Senha (mín. 6 caracteres)" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
               <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="registerPassword">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
             </div>
 
             <div class="relative mb-4 w-full">
-              <input type="password" id="registerPasswordConfirm" placeholder="Confirmar Senha" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
+              <input type="password" id="registerPasswordConfirm" placeholder="Confirmar Senha" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
               <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="registerPasswordConfirm">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
@@ -200,18 +201,18 @@
       </div>
 
       <!-- Seleção de Fila -->
-      <div id="queue-selection-screen" class="hidden p-4 space-y-6 fade-in-up">
-        <h1 class="text-3xl font-bold text-center mt-12 text-slate-900 dark:text-white">Minhas Filas</h1>
+      <div id="queue-selection-screen" class="hidden space-y-6 fade-in-up">
+        <h1 class="text-3xl font-bold text-center mt-6 text-slate-900 dark:text-white">Minhas Filas</h1>
         <div id="queues-list" class="space-y-3"></div>
         <div class="space-y-3 pt-4">
           <button id="join-new-queue-btn" class="w-full bg-slate-700 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">Entrar por Código</button>
           <button id="create-new-queue-btn" class="hidden w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl">Criar Fila</button>
-          <button id="main-logout-btn" class="w-full text-center text-sm text-red-500 hover:underline">Sair</button>
+          <button id="main-logout-btn" class="w-full text-center text-sm text-red-500 hover:underline">Sair da Conta</button>
         </div>
       </div>
 
       <!-- Conteúdo Principal -->
-      <div id="main-content" class="hidden p-4 space-y-6 fade-in-up">
+      <div id="main-content" class="hidden space-y-6 fade-in-up">
         <header class="flex justify-between items-center">
           <div>
             <button id="back-to-selection-btn" class="flex items-center gap-1 text-sm text-slate-500 hover:text-primary-500 transition-colors mb-1">
@@ -222,34 +223,34 @@
           </div>
           <div class="flex items-center gap-3">
             <button id="edit-profile-btn" class="text-slate-500 hover:text-primary-500 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-            <img id="header-user-avatar" class="w-12 h-12 rounded-full object-cover border-2 border-primary-500/50" />
+            <img id="header-user-avatar" class="w-12 h-12 rounded-full object-cover border-2 border-primary-500/50 shadow-sm" />
             <button id="header-leave-queue-btn" class="hidden bg-red-500 text-white font-semibold py-2 px-4 rounded-xl text-sm hover:bg-red-600 transition-colors">Sair</button>
           </div>
         </header>
 
         <!-- Admin Panel -->
         <div id="super-admin-panel" class="hidden glass-effect bg-amber-400/20 p-5 rounded-2xl space-y-3">
-          <h2 class="text-lg font-bold text-center text-amber-800 dark:text-amber-300">Admin</h2>
+          <h2 class="text-lg font-bold text-center text-amber-800 dark:text-amber-300">Painel Admin</h2>
           <div class="grid grid-cols-2 gap-2 text-sm">
-            <input type="time" id="queueOpenTime" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg p-2 outline-none focus:ring-2 focus:ring-primary-500" />
-            <input type="time" id="queueCloseTime" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg p-2 outline-none focus:ring-2 focus:ring-primary-500" />
+            <input type="time" id="queueOpenTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
+            <input type="time" id="queueCloseTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
-          <button id="save-schedule-btn" class="w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-600 transition-colors">Salvar Horários</button>
+          <button id="save-schedule-btn" class="w-full bg-blue-500 text-white py-2 rounded-xl text-sm font-bold hover:bg-blue-600 transition-colors">Salvar Horários</button>
           <div class="grid grid-cols-2 gap-2">
-            <button id="restart-queue-btn" class="bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 transition-colors">Reiniciar Fila</button>
-            <button id="view-logs-btn" class="bg-slate-500 text-white py-2 rounded-lg text-sm hover:bg-slate-600 transition-colors">Histórico</button>
+            <button id="restart-queue-btn" class="bg-red-500 text-white py-2 rounded-xl text-sm hover:bg-red-600 transition-colors font-bold">Zerar Fila</button>
+            <button id="view-logs-btn" class="bg-slate-500 text-white py-2 rounded-xl text-sm hover:bg-slate-600 transition-colors font-bold">Histórico</button>
           </div>
         </div>
 
         <!-- Cards de Info -->
         <div class="bg-gradient-to-br from-primary-500 to-primary-600 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center transition-colors duration-500">
           <div>
-            <p class="text-primary-100 text-sm">Sua Posição</p>
-            <p id="user-position" class="text-5xl font-extrabold">-</p>
+            <p class="text-primary-100 text-sm font-medium">Sua Posição</p>
+            <p id="user-position" class="text-6xl font-extrabold">-</p>
           </div>
           <div class="text-right">
-            <p class="text-primary-100 text-sm">Total</p>
-            <p id="total-in-queue" class="text-3xl font-bold">0</p>
+            <p class="text-primary-100 text-sm font-medium">Total na Fila</p>
+            <p id="total-in-queue" class="text-4xl font-bold">0</p>
           </div>
         </div>
 
@@ -258,30 +259,32 @@
           <h3 class="text-lg font-bold text-center text-slate-800 dark:text-white mb-3">
             Chat da Fila
           </h3>
-          <div id="chat-messages" class="h-64 overflow-y-auto space-y-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl mb-3 border border-slate-200 dark:border-transparent"></div>
-          <form id="chat-form" class="flex gap-2">
-            <input type="text" id="chat-input" placeholder="Digite uma mensagem..." class="flex-grow bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" autocomplete="off" />
-            <button type="submit" class="bg-primary-500 hover:bg-primary-600 transition-colors text-white font-semibold py-2 px-4 rounded-lg text-sm">Enviar</button>
+          <div id="chat-messages" class="h-72 overflow-y-auto space-y-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl mb-3 border border-slate-200 dark:border-transparent"></div>
+          
+          <form id="chat-form" class="flex items-center gap-3 w-full">
+            <input type="text" id="chat-input" placeholder="Digite uma mensagem..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" autocomplete="off" />
+            <button type="submit" class="shrink-0 bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Enviar</button>
           </form>
         </div>
 
         <!-- Status da Fila -->
         <div id="queue-status-card" class="text-center p-4 rounded-2xl transition-all duration-500">
-          <p id="queue-status-message" class="font-semibold"></p>
+          <p id="queue-status-message" class="font-semibold text-lg"></p>
         </div>
 
         <!-- Seção de Observação -->
         <div id="observation-section" class="hidden glass-effect p-4 rounded-2xl space-y-2 shadow-sm">
           <p class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Sua Observação</p>
-          <div class="flex gap-2">
-            <input type="text" id="userObservation" placeholder="Ex: Chego em 5 min..." class="flex-grow bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" />
-            <button id="save-observation-btn" class="bg-green-500 hover:bg-green-600 transition-colors text-white px-3 rounded-lg text-sm font-bold">Salvar</button>
+          
+          <div class="flex items-center gap-3 w-full">
+            <input type="text" id="userObservation" placeholder="Ex: Chego em 5 min..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" />
+            <button id="save-observation-btn" class="shrink-0 bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Salvar</button>
           </div>
         </div>
 
         <!-- Lista da Fila -->
         <div class="space-y-3 pb-32">
-          <h3 class="font-bold text-lg text-slate-900 dark:text-white">Ordem de Chamada</h3>
+          <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-4">Ordem de Chamada</h3>
           <div id="queue-list" class="space-y-3"></div>
         </div>
       </div>
@@ -289,7 +292,7 @@
       <!-- Botão Flutuante (Lugar Aleatório) -->
       <div id="bottom-bar" class="hidden p-4 z-30">
         <div class="max-w-md mx-auto flex justify-center">
-          <button id="join-leave-btn" class="font-bold py-4 px-8 rounded-2xl duration-300 shadow-xl"></button>
+          <button id="join-leave-btn" class="font-bold py-4 px-8 rounded-2xl duration-300 shadow-xl text-lg"></button>
         </div>
       </div>
     </div>
@@ -300,22 +303,22 @@
             <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-white">Editar Perfil</h2>
             
             <!-- Container da Foto de Perfil com Botão Oculto -->
-            <div class="relative w-24 h-24 mx-auto group cursor-pointer" id="profile-pic-container" title="Clique para mudar a foto">
-                <img id="profile-pic-preview" class="w-24 h-24 rounded-full border-4 border-primary-500 object-cover shadow-lg transition-opacity group-hover:opacity-60" />
+            <div class="relative w-28 h-28 mx-auto group cursor-pointer" id="profile-pic-container" title="Clique para mudar a foto">
+                <img id="profile-pic-preview" class="w-28 h-28 rounded-full border-4 border-primary-500 object-cover shadow-lg transition-opacity group-hover:opacity-60" />
                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span class="text-white text-[10px] font-bold bg-black/60 px-2 py-1 rounded-lg backdrop-blur-sm pointer-events-none">MUDAR</span>
+                    <span class="text-white text-[10px] font-bold bg-black/60 px-3 py-1 rounded-xl backdrop-blur-sm pointer-events-none">MUDAR FOTO</span>
                 </div>
                 <input type="file" id="profile-pic-input" accept="image/*" class="hidden" />
             </div>
 
             <div class="space-y-3">
-              <input type="text" id="userName" placeholder="Seu Nome Completo" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
-              <input type="text" id="userCourse" placeholder="Seu Curso" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
-              <input type="tel" id="userProfilePhone" placeholder="Seu Celular" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+              <input type="text" id="userName" placeholder="Seu Nome Completo" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+              <input type="text" id="userCourse" placeholder="Seu Curso / Setor" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+              <input type="tel" id="userProfilePhone" placeholder="Seu Celular" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
             </div>
 
             <!-- Preferências de Tema e Modo Escuro -->
-            <div class="bg-slate-100 dark:bg-black/20 p-4 rounded-xl space-y-4 border border-slate-200 dark:border-transparent">
+            <div class="bg-slate-100 dark:bg-black/20 p-4 rounded-2xl space-y-4 border border-slate-200 dark:border-transparent">
               <p class="text-xs font-bold text-center text-slate-600 dark:text-slate-400 uppercase tracking-widest">Aparência do App</p>
               
               <!-- Seletor de Cores -->
@@ -340,18 +343,35 @@
 
             <div class="space-y-2 pt-2">
               <button id="save-profile-btn" class="w-full bg-primary-500 text-white font-bold py-3 rounded-xl hover:bg-primary-600 transition-colors">Salvar Alterações</button>
-              <button id="close-profile-btn" class="w-full text-slate-600 dark:text-slate-400 text-sm hover:underline py-2">Fechar</button>
+              <button id="close-profile-btn" class="w-full text-slate-600 dark:text-slate-400 font-medium text-sm hover:underline py-2">Fechar</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal de Histórico -->
+    <div id="logs-modal" class="hidden modal-overlay overflow-y-auto">
+        <div class="w-full max-w-lg glass-effect rounded-3xl p-6 space-y-4 fade-in-up my-auto flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center shrink-0 pb-2 border-b border-slate-200 dark:border-slate-700/50">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Histórico da Fila</h2>
+                <button id="close-logs-modal" class="text-slate-500 hover:text-primary-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div id="logs-list" class="flex-grow overflow-y-auto space-y-3 pr-2">
+                <!-- Histórico entra aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Entrada -->
     <div id="join-queue-modal" class="hidden modal-overlay">
       <div class="glass-effect p-6 rounded-2xl w-full max-w-sm space-y-4 fade-in-up">
-        <h3 class="text-lg font-bold text-center text-slate-900 dark:text-white">Entrar em uma Fila</h3>
-        <input type="text" id="queue-code-input" placeholder="CÓDIGO" class="w-full text-center tracking-widest font-mono uppercase bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+        <h3 class="text-lg font-bold text-center text-slate-900 dark:text-white">Entrar numa Fila</h3>
+        <input type="text" id="queue-code-input" placeholder="CÓDIGO DA FILA" class="w-full text-center tracking-widest font-mono uppercase bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
         <div class="grid grid-cols-2 gap-2">
-          <button id="cancel-join-queue" class="bg-slate-600 text-white font-semibold py-2 rounded-lg hover:bg-slate-700 transition-colors">Cancelar</button>
-          <button id="confirm-join-queue" class="bg-primary-500 text-white font-semibold py-2 rounded-lg hover:bg-primary-600 transition-colors">Entrar</button>
+          <button id="cancel-join-queue" class="bg-slate-600 text-white font-semibold py-3 rounded-xl hover:bg-slate-700 transition-colors">Cancelar</button>
+          <button id="confirm-join-queue" class="bg-primary-500 text-white font-semibold py-3 rounded-xl hover:bg-primary-600 transition-colors">Entrar</button>
         </div>
       </div>
     </div>
@@ -649,14 +669,14 @@
           const initial = m.name ? m.name.charAt(0).toUpperCase() : "U";
           const avatar = m.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
           return `
-          <div class="glass-effect p-3 rounded-2xl flex items-center gap-4 ${m.uid === currentUser.uid ? 'border-2 border-primary-500' : ''}">
-            <div class="w-10 h-10 flex items-center justify-center font-bold bg-white dark:bg-white/10 shadow-sm border border-slate-200 dark:border-transparent rounded-xl flex-shrink-0 text-slate-800 dark:text-white">${i+1}</div>
-            <img src="${avatar}" class="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700">
+          <div class="glass-effect p-3 rounded-2xl flex items-center gap-4 ${m.uid === currentUser.uid ? 'border-2 border-primary-500 shadow-md' : ''}">
+            <div class="w-12 h-12 flex items-center justify-center font-bold bg-white dark:bg-white/10 shadow-sm border border-slate-200 dark:border-transparent rounded-xl flex-shrink-0 text-slate-800 dark:text-white text-lg">${i+1}</div>
+            <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700">
             <div class="flex-grow">
               <p class="font-bold text-sm text-slate-900 dark:text-white">${m.name}</p>
-              <p class="text-xs text-slate-600 dark:text-slate-400">${m.course} ${m.observation ? `<br><span class="italic text-primary-600 dark:text-primary-400">💬 "${m.observation}"</span>` : ''}</p>
+              <p class="text-xs text-slate-600 dark:text-slate-400">${m.course} ${m.observation ? `<br><span class="italic text-primary-600 dark:text-primary-400 font-medium">💬 "${m.observation}"</span>` : ''}</p>
             </div>
-            ${userProfile.role === 'superadmin' ? `<button class="text-red-500 hover:scale-110 delete-btn flex-shrink-0 transition-transform" data-uid="${m.uid}">✕</button>` : ''}
+            ${userProfile.role === 'superadmin' ? `<button class="text-red-500 hover:scale-110 delete-btn flex-shrink-0 transition-transform p-2 bg-red-100 dark:bg-red-500/20 rounded-lg" data-uid="${m.uid}">✕</button>` : ''}
           </div>
         `}).join("");
 
@@ -678,7 +698,7 @@
           return `
             <div class="flex items-start gap-2.5 ${isMe ? "justify-end" : ""}">
               <img class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700 ${isMe ? "order-2" : "order-1"}" src="${avatar}" alt="${msg.userName}">
-              <div class="flex flex-col gap-1 ${isMe ? "order-1 items-end" : "order-2 items-start"} max-w-[80%]">
+              <div class="flex flex-col gap-1 ${isMe ? "order-1 items-end" : "order-2 items-start"} max-w-[85%]">
                 <div class="flex items-center space-x-2">
                   <span class="text-xs font-semibold text-slate-900 dark:text-white">${isMe ? "Você" : msg.userName}</span>
                   <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${time}</span>
@@ -692,8 +712,68 @@
         chatEl.scrollTop = chatEl.scrollHeight;
       }
 
+      // --- LOGICA DE HISTÓRICO (MODAL) ---
+      async function showLogsModal() {
+        const logsListEl = el("logs-list");
+        logsListEl.innerHTML = '<div class="flex justify-center p-4"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div></div>';
+        el("logs-modal").classList.remove("hidden");
+
+        try {
+            const q = query(collection(db, "queues", currentQueueId, "chat"), orderBy("timestamp", "desc"), limit(200));
+            const snap = await getDocs(q);
+            const logs = snap.docs.map(d => d.data());
+            renderLogs(logs);
+        } catch (error) {
+            logsListEl.innerHTML = '<p class="text-red-500 text-center">Erro ao carregar o histórico.</p>';
+        }
+      }
+
+      function renderLogs(logs) {
+        const logsListEl = el("logs-list");
+        if (logs.length === 0) {
+            logsListEl.innerHTML = '<p class="text-center text-slate-500">Nenhum registro encontrado.</p>';
+            return;
+        }
+
+        logsListEl.innerHTML = logs.map(log => {
+            const time = log.timestamp ? log.timestamp.toDate().toLocaleString("pt-BR") : "";
+            
+            if (log.type === "system") {
+                return `
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex gap-3 items-start">
+                    <span class="text-lg">⚙️</span>
+                    <div>
+                        <p class="text-sm font-medium text-slate-700 dark:text-slate-300 italic">${log.text}</p>
+                        <p class="text-[10px] text-slate-500">${time}</p>
+                    </div>
+                </div>`;
+            }
+            
+            const isMe = log.uid === currentUser.uid;
+            const initial = log.userName ? log.userName.charAt(0).toUpperCase() : "U";
+            const avatar = log.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
+
+            return `
+            <div class="flex items-start gap-2.5">
+                <img class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700" src="${avatar}" alt="${log.userName}">
+                <div class="flex flex-col gap-1 max-w-[85%]">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-semibold text-slate-900 dark:text-white">${isMe ? "Você" : log.userName}</span>
+                        <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${time}</span>
+                    </div>
+                    <div class="leading-snug p-3 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm break-words">
+                        <p class="text-sm font-normal">${log.text}</p>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+      }
+
+      el("view-logs-btn").onclick = showLogsModal;
+      el("close-logs-modal").onclick = () => el("logs-modal").classList.add("hidden");
+
       // --- Eventos ---
-      el("login-btn").onclick = () => signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => showToast("Erro no login", "error"));
+      el("login-btn").onclick = () => signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => showToast("E-mail ou senha incorretos", "error"));
       
       el("register-btn").onclick = async () => {
         const email = el("registerEmail").value.trim();
@@ -716,7 +796,7 @@
         try {
             await createUserWithEmailAndPassword(auth, email, pwd);
         } catch (error) {
-            showToast("Erro ao criar conta.", "error");
+            showToast("Erro ao criar conta. O E-mail já pode estar em uso.", "error");
         }
       };
       
@@ -809,7 +889,7 @@
           const d = await getDoc(doc(db, "queues", id));
           if(d.exists()) {
             const div = document.createElement("div");
-            div.className = "glass-effect p-4 rounded-xl cursor-pointer hover:bg-slate-200/20 dark:hover:bg-white/10 transition-colors";
+            div.className = "glass-effect p-4 rounded-xl cursor-pointer hover:bg-slate-200/20 dark:hover:bg-white/10 transition-colors border-l-4 border-primary-500 shadow-sm";
             div.innerHTML = `<h3 class="font-bold text-slate-900 dark:text-white">${d.data().name}</h3><p class="text-xs text-slate-500">Código: ${d.data().code}</p>`;
             div.onclick = () => enterQueue(id);
             list.appendChild(div);
@@ -854,18 +934,26 @@
       el("show-register-tab").onclick = () => switchAuthTab("register");
 
       function showScreen(s) {
-        el("auth-overlay").classList.add("hidden"); el("profile-overlay").classList.add("hidden"); el("main-content").classList.add("hidden"); el("queue-selection-screen").classList.add("hidden");
+        el("auth-overlay").classList.add("hidden"); 
+        el("profile-overlay").classList.add("hidden"); 
+        el("main-content").classList.add("hidden"); 
+        el("queue-selection-screen").classList.add("hidden");
+
+        // Mostra o relógio apenas nas telas de uso
+        if (s === "auth" || s === "profile") {
+            el("global-clock-widget").classList.add("hidden");
+            el("global-clock-widget").classList.remove("flex");
+        } else {
+            el("global-clock-widget").classList.remove("hidden");
+            el("global-clock-widget").classList.add("flex");
+        }
+        
         if(s === "auth") el("auth-overlay").classList.remove("hidden");
         if(s === "profile") el("profile-overlay").classList.remove("hidden");
         if(s === "main") el("main-content").classList.remove("hidden");
         if(s === "queueSelection") el("queue-selection-screen").classList.remove("hidden");
       }
       
-      el("main-logout-btn").onclick = () => {
-        localStorage.removeItem("lastQueueId");
-        signOut(auth);
-      };
-
       el("join-new-queue-btn").onclick = () => el("join-queue-modal").classList.remove("hidden");
       el("cancel-join-queue").onclick = () => el("join-queue-modal").classList.add("hidden");
       el("confirm-join-queue").onclick = async () => {
@@ -902,3 +990,5 @@
     </script>
   </body>
 </html>
+
+
