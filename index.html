@@ -116,14 +116,13 @@
       #toast.error { background: linear-gradient(to right, #ef4444, #dc2626); }
       #toast.info { background: linear-gradient(to right, #3b82f6, #2563eb); }
 
-      .modal-overlay { position: fixed; inset: 0; background-color: rgba(10, 10, 20, 0.5); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+      .modal-overlay { position: fixed; inset: 0; background-color: rgba(10, 10, 20, 0.5); backdrop-filter: blur(8px); z-index: 600; display: flex; align-items: center; justify-content: center; padding: 1rem; }
       
       /* --- Custom Scrollbar --- */
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: var(--primary-400); border-radius: 10px; transition: background 0.3s ease; }
       
-      /* Focus ring overrides for inputs */
       input:focus { box-shadow: 0 0 0 3px rgba(var(--primary-500), 0.3); border-color: var(--primary-500) !important; outline: none; }
     </style>
   </head>
@@ -134,11 +133,873 @@
       <div class="blob blob-3"></div>
     </div>
 
-    <!-- Ajustado pt-6 para que o layout flua naturalmente sem o relógio sobrepor -->
     <div id="app-container" class="container mx-auto max-w-md pb-28 pt-6 px-4">
       <div id="toast"></div>
       
       <!-- Relógio Digital Sincronizado -->
+      <div id="global-clock-widget" class="hidden mx-auto mb-6 w-max glass-effect px-6 py-2 rounded-3xl shadow-lg border border-primary-500/30 flex-col items-center justify-center whitespace-nowrap backdrop-blur-md">
+        <div class="text-[10px] uppercase tracking-widest text-primary-500 font-bold mb-0.5">Horário do Servidor</div>
+        <div id="server-clock-display" class="text-xl font-mono font-black text-slate-900 dark:text-white tracking-wider">00:00:00</div>
+      </div>
+
+      <div id="loading-section" class="flex items-center justify-center h-screen">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </div>
+
+      <!-- Tela de Autenticação -->
+      <div id="auth-overlay" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4">
+        <div id="auth-section" class="w-full glass-effect rounded-3xl p-6 shadow-2xl space-y-4 fade-in-up relative overflow-hidden">
+          <div id="auth-tabs" class="flex border-b border-slate-200/50 dark:border-slate-700/50 mb-4">
+            <button id="show-login-tab" class="flex-1 pb-2 text-center font-semibold border-b-2 border-primary-500 text-primary-500 transition-colors duration-300">Entrar</button>
+            <button id="show-register-tab" class="flex-1 pb-2 text-center font-semibold text-slate-500 dark:text-slate-400 border-b-2 border-transparent transition-colors duration-300">Registrar</button>
+          </div>
+
+          <div id="login-form" class="fade-in-up">
+            <input type="email" id="loginEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
+            <div class="relative mb-4 w-full">
+              <input type="password" id="loginPassword" placeholder="Senha" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="current-password" />
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="loginPassword">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <button id="login-btn" class="w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Entrar</button>
+          </div>
+
+          <div id="register-form" class="hidden">
+            <input type="email" id="registerEmail" placeholder="E-mail" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="email" />
+            <input type="tel" id="registerPhone" placeholder="Celular (Opcional)" class="mb-4 w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="tel" />
+            <div class="relative mb-4 w-full">
+              <input type="password" id="registerPassword" placeholder="Senha (mín. 6 caracteres)" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="registerPassword">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <div class="relative mb-4 w-full">
+              <input type="password" id="registerPasswordConfirm" placeholder="Confirmar Senha" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 pr-12 outline-none focus:ring-2 focus:ring-primary-500 transition-all" autocomplete="new-password" />
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-primary-500 toggle-password-btn" data-target="registerPasswordConfirm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <button id="register-btn" class="w-full bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 rounded-xl mt-2">Criar Conta</button>
+          </div>
+          <p id="auth-error" class="text-red-500 text-center text-sm min-h-[20px] mt-2"></p>
+        </div>
+      </div>
+
+      <!-- Seleção de Fila -->
+      <div id="queue-selection-screen" class="hidden space-y-6 fade-in-up">
+        <h1 class="text-3xl font-bold text-center mt-6 text-slate-900 dark:text-white">Minhas Filas</h1>
+        <div id="queues-list" class="space-y-3"></div>
+        <div class="space-y-3 pt-4">
+          <button id="join-new-queue-btn" class="w-full bg-slate-700 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">Entrar por Código</button>
+          <button id="create-new-queue-btn" class="hidden w-full bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 rounded-xl">Criar Fila</button>
+          <button id="main-logout-btn" class="w-full text-center text-sm text-red-500 hover:underline">Sair da Conta</button>
+        </div>
+      </div>
+
+      <!-- Conteúdo Principal -->
+      <div id="main-content" class="hidden space-y-6 fade-in-up">
+        <header class="flex justify-between items-center">
+          <div>
+            <button id="back-to-selection-btn" class="flex items-center gap-1 text-sm text-slate-500 hover:text-primary-500 transition-colors mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              Voltar
+            </button>
+            <h1 id="header-queue-name" class="text-2xl font-bold text-slate-900 dark:text-white">Fila</h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="edit-profile-btn" class="text-slate-500 hover:text-primary-500 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+            <img id="header-user-avatar" class="w-12 h-12 rounded-full object-cover border-2 border-primary-500/50 shadow-sm" />
+            <button id="header-leave-queue-btn" class="hidden bg-red-500 text-white font-semibold py-2 px-4 rounded-xl text-sm hover:bg-red-600 transition-colors">Sair</button>
+          </div>
+        </header>
+
+        <!-- Admin Panel -->
+        <div id="super-admin-panel" class="hidden glass-effect bg-amber-400/20 p-5 rounded-2xl space-y-3">
+          <h2 class="text-lg font-bold text-center text-amber-800 dark:text-amber-300">Painel Admin</h2>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <input type="time" id="queueOpenTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
+            <input type="time" id="queueCloseTime" class="bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 px-3 outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <button id="save-schedule-btn" class="w-full bg-blue-500 text-white py-2 rounded-xl text-sm font-bold hover:bg-blue-600 transition-colors">Salvar Horários</button>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="restart-queue-btn" class="bg-red-500 text-white py-2 rounded-xl text-sm hover:bg-red-600 transition-colors font-bold">Zerar Fila</button>
+            <button id="view-logs-btn" class="bg-slate-500 text-white py-2 rounded-xl text-sm hover:bg-slate-600 transition-colors font-bold">Histórico</button>
+          </div>
+        </div>
+
+        <!-- Cards de Info -->
+        <div class="bg-gradient-to-br from-primary-500 to-primary-600 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center transition-colors duration-500">
+          <div>
+            <p class="text-primary-100 text-sm font-medium">Sua Posição</p>
+            <p id="user-position" class="text-6xl font-extrabold">-</p>
+          </div>
+          <div class="text-right">
+            <p class="text-primary-100 text-sm font-medium">Total na Fila</p>
+            <p id="total-in-queue" class="text-4xl font-bold">0</p>
+          </div>
+        </div>
+
+        <!-- Seção de Chat -->
+        <div id="chat-section" class="glass-effect p-4 rounded-2xl shadow-sm">
+          <h3 class="text-lg font-bold text-center text-slate-800 dark:text-white mb-3">Chat da Fila</h3>
+          <div id="chat-messages" class="h-72 overflow-y-auto space-y-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl mb-3 border border-slate-200 dark:border-transparent"></div>
+          <form id="chat-form" class="flex items-center gap-3 w-full">
+            <input type="text" id="chat-input" placeholder="Digite uma mensagem..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" autocomplete="off" />
+            <button type="submit" class="shrink-0 bg-primary-500 hover:bg-primary-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Enviar</button>
+          </form>
+        </div>
+
+        <!-- Status da Fila -->
+        <div id="queue-status-card" class="text-center p-4 rounded-2xl transition-all duration-500">
+          <p id="queue-status-message" class="font-semibold text-lg"></p>
+        </div>
+
+        <!-- Seção de Observação -->
+        <div id="observation-section" class="hidden glass-effect p-4 rounded-2xl space-y-2 shadow-sm">
+          <p class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Sua Observação</p>
+          <div class="flex items-center gap-3 w-full">
+            <input type="text" id="userObservation" placeholder="Ex: Chego em 5 min..." class="flex-1 w-full min-w-0 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary-500 transition-all outline-none" />
+            <button id="save-observation-btn" class="shrink-0 bg-green-500 hover:bg-green-600 transition-colors text-white font-bold py-3 px-5 rounded-xl text-sm">Salvar</button>
+          </div>
+        </div>
+
+        <!-- Lista da Fila -->
+        <div class="space-y-3 pb-32">
+          <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-4">Ordem de Chamada</h3>
+          <div id="queue-list" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <!-- Botão Flutuante (Lugar Aleatório) -->
+      <div id="bottom-bar" class="hidden z-30">
+        <div class="max-w-md mx-auto flex justify-center">
+          <button id="join-leave-btn" class="font-bold py-4 px-8 rounded-2xl shadow-xl text-lg"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modais -->
+    <div id="profile-overlay" class="hidden fixed inset-0 z-50 p-4 modal-overlay overflow-y-auto">
+        <div class="w-full max-w-md glass-effect rounded-3xl p-6 space-y-5 fade-in-up my-auto">
+            <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-white">Editar Perfil</h2>
+            
+            <div class="relative w-28 h-28 mx-auto group cursor-pointer" id="profile-pic-container" title="Clique para mudar a foto">
+                <img id="profile-pic-preview" class="w-28 h-28 rounded-full border-4 border-primary-500 object-cover shadow-lg transition-opacity group-hover:opacity-60" />
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="text-white text-[10px] font-bold bg-black/60 px-3 py-1 rounded-xl backdrop-blur-sm pointer-events-none">MUDAR FOTO</span>
+                </div>
+                <input type="file" id="profile-pic-input" accept="image/*" class="hidden" />
+            </div>
+
+            <div class="space-y-3">
+              <input type="text" id="userName" placeholder="Seu Nome Completo" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+              <input type="text" id="userCourse" placeholder="Seu Curso / Setor" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+              <input type="tel" id="userProfilePhone" placeholder="Seu Celular" class="w-full bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+            </div>
+
+            <div class="bg-slate-100 dark:bg-black/20 p-4 rounded-2xl space-y-4 border border-slate-200 dark:border-transparent">
+              <p class="text-xs font-bold text-center text-slate-600 dark:text-slate-400 uppercase tracking-widest">Aparência do App</p>
+              
+              <div class="flex justify-center gap-4">
+                <button class="theme-btn w-8 h-8 rounded-full bg-[#6366f1] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-indigo"></button>
+                <button class="theme-btn w-8 h-8 rounded-full bg-[#10b981] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-emerald"></button>
+                <button class="theme-btn w-8 h-8 rounded-full bg-[#f43f5e] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-rose"></button>
+                <button class="theme-btn w-8 h-8 rounded-full bg-[#f59e0b] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-amber"></button>
+                <button class="theme-btn w-8 h-8 rounded-full bg-[#8b5cf6] ring-offset-2 dark:ring-offset-slate-800 transition-all hover:scale-110" data-theme="theme-violet"></button>
+              </div>
+
+              <div class="flex justify-center items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Claro</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                  <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
+                </label>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Escuro</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 pt-2">
+              <button id="save-profile-btn" class="w-full bg-primary-500 text-white font-bold py-3 rounded-xl hover:bg-primary-600 transition-colors">Salvar Alterações</button>
+              <button id="close-profile-btn" class="w-full text-slate-600 dark:text-slate-400 font-medium text-sm hover:underline py-2">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Histórico -->
+    <div id="logs-modal" class="hidden modal-overlay overflow-y-auto">
+        <div class="w-full max-w-lg glass-effect rounded-3xl p-6 space-y-4 fade-in-up my-auto flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center shrink-0 pb-2 border-b border-slate-200 dark:border-slate-700/50">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Histórico da Fila</h2>
+                <button id="close-logs-modal" class="text-slate-500 hover:text-primary-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div id="logs-list" class="flex-grow overflow-y-auto space-y-3 pr-2"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Entrada -->
+    <div id="join-queue-modal" class="hidden modal-overlay">
+      <div class="glass-effect p-6 rounded-2xl w-full max-w-sm space-y-4 fade-in-up">
+        <h3 class="text-lg font-bold text-center text-slate-900 dark:text-white">Entrar numa Fila</h3>
+        <input type="text" id="queue-code-input" placeholder="CÓDIGO DA FILA" class="w-full text-center tracking-widest font-mono uppercase bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white transition-all outline-none" />
+        <div class="grid grid-cols-2 gap-2">
+          <button id="cancel-join-queue" class="bg-slate-600 text-white font-semibold py-3 rounded-xl hover:bg-slate-700 transition-colors">Cancelar</button>
+          <button id="confirm-join-queue" class="bg-primary-500 text-white font-semibold py-3 rounded-xl hover:bg-primary-600 transition-colors">Entrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação Personalizado -->
+    <div id="confirm-modal" class="hidden modal-overlay z-[600]">
+      <div class="glass-effect p-6 rounded-3xl w-full max-w-sm space-y-4 fade-in-up text-center">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="confirm-modal-title">Atenção</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300" id="confirm-modal-text">Tem certeza que deseja continuar?</p>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button id="cancel-confirm-btn" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold py-3 rounded-xl transition-colors">Cancelar</button>
+          <button id="accept-confirm-btn" class="bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition-colors">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, onSnapshot, query, writeBatch, addDoc, serverTimestamp, getDocs, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDRf7ZciyvbJkX-P5cfWkzfI2Uw11Lxy0Q",
+        authDomain: "filaonibus.firebaseapp.com",
+        projectId: "filaonibus",
+        storageBucket: "filaonibus.appspot.com",
+        messagingSenderId: "93496874568",
+        appId: "1:93496874568:web:52b127aa7d70dc8471aa7d"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const el = (id) => document.getElementById(id);
+
+      let currentUser = null, userProfile = null, currentQueueId = null;
+      let currentQueueMembers = [], currentQueueSettings = null; 
+      let serverOffset = 0, buttonWasMoved = false;
+      let tempPhotoDataUrl = null;
+      let unsubMembers = null, unsubSettings = null, unsubChat = null;
+      let pendingRegistrationPhone = ""; 
+      const SUPER_ADMIN_UID = ["twqMzdcSPVT31cuQJKsE8HKxQBH3", "fezXWTgqXUMCUBUKSBau6Sv4K9n2"];
+
+      // --- Custom Confirm Modal ---
+      let confirmActionCallback = null;
+      
+      function showConfirmModal(title, text, onConfirm) {
+        el("confirm-modal-title").textContent = title;
+        el("confirm-modal-text").textContent = text;
+        confirmActionCallback = onConfirm;
+        el("confirm-modal").classList.remove("hidden");
+      }
+
+      el("cancel-confirm-btn").onclick = () => {
+        el("confirm-modal").classList.add("hidden");
+        confirmActionCallback = null;
+      };
+
+      el("accept-confirm-btn").onclick = () => {
+        if (confirmActionCallback) confirmActionCallback();
+        el("confirm-modal").classList.add("hidden");
+      };
+
+      // --- Notificações ---
+      function showToast(message, type = "info") {
+        const toast = el("toast");
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = `show ${type}`;
+        setTimeout(() => {
+            if (toast.className.includes("show")) {
+                toast.className = toast.className.replace("show", "");
+            }
+        }, 3000);
+      }
+
+      // --- Mostrar/Esconder Senhas ---
+      document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const input = el(targetId);
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+            if (isPassword) {
+                this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>`;
+            } else {
+                this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            }
+        });
+      });
+
+      // --- Sincronização e Relógio ---
+      function initClock() {
+        setInterval(() => {
+          const now = new Date(Date.now() + serverOffset);
+          el("server-clock-display").textContent = now.toLocaleTimeString("pt-BR");
+          
+          if (currentQueueId && currentQueueSettings) {
+             updatePeriodicUI();
+          }
+        }, 1000);
+      }
+      initClock();
+
+      function getSyncedDate() { return new Date(Date.now() + serverOffset); }
+
+      // --- Lógica de Temas ---
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      const themeHexMap = { 'theme-indigo': '6366f1', 'theme-emerald': '10b981', 'theme-rose': 'f43f5e', 'theme-amber': 'f59e0b', 'theme-violet': '8b5cf6' };
+
+      function applyThemeSelection(themeName) {
+        document.documentElement.classList.remove('theme-indigo', 'theme-emerald', 'theme-rose', 'theme-amber', 'theme-violet');
+        document.documentElement.classList.add(themeName);
+        localStorage.setItem('appTheme', themeName);
+        themeButtons.forEach(btn => {
+          if (btn.dataset.theme === themeName) { btn.classList.add('ring-2', 'ring-primary-500', 'scale-110'); } 
+          else { btn.classList.remove('ring-2', 'ring-primary-500', 'scale-110'); }
+        });
+      }
+      function getThemeHex() { return themeHexMap[localStorage.getItem('appTheme') || 'theme-indigo'] || '6366f1'; }
+
+      applyThemeSelection(localStorage.getItem('appTheme') || 'theme-indigo');
+      themeButtons.forEach(btn => { btn.addEventListener('click', (e) => { e.preventDefault(); applyThemeSelection(btn.dataset.theme); }); });
+
+      const darkModeToggle = el('dark-mode-toggle');
+      darkModeToggle.checked = document.documentElement.classList.contains('dark');
+      darkModeToggle.addEventListener('change', (e) => {
+        if (e.target.checked) { document.documentElement.classList.add('dark'); localStorage.setItem('appDarkMode', 'true'); } 
+        else { document.documentElement.classList.remove('dark'); localStorage.setItem('appDarkMode', 'false'); }
+      });
+
+      function randomButtonPos() {
+        const bar = el("bottom-bar");
+        bar.style.position = "absolute";
+        bar.style.transition = "top 0.5s ease, left 0.5s ease";
+        const w = bar.offsetWidth || 200, h = bar.offsetHeight || 80;
+        const x = Math.floor(Math.random() * (window.innerWidth - w));
+        const y = Math.floor(Math.random() * (window.innerHeight - h));
+        bar.style.left = `${x}px`;
+        bar.style.top = `${y}px`;
+        buttonWasMoved = true;
+      }
+
+      async function checkDailyReset(id, data) {
+        const today = getSyncedDate().toLocaleDateString("pt-BR");
+        if (data.lastResetDate !== today) {
+          const members = await getDocs(collection(db, "queues", id, "members"));
+          const batch = writeBatch(db);
+          members.docs.forEach(d => batch.delete(d.ref));
+          batch.update(doc(db, "queues", id), { lastResetDate: today });
+          await batch.commit();
+          await addDoc(collection(db, "queues", id, "chat"), { text: "Fila reiniciada para o novo dia!", type: "system", timestamp: serverTimestamp() });
+        }
+      }
+
+      el("profile-pic-container").onclick = () => el("profile-pic-input").click();
+
+      el("profile-pic-input").onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const MAX_SIZE = 200;
+            let width = img.width, height = img.height;
+            if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+            else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+            canvas.width = width; canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            tempPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            el("profile-pic-preview").src = tempPhotoDataUrl;
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      function openProfileModal() {
+        tempPhotoDataUrl = null;
+        el("userName").value = userProfile?.name || "";
+        el("userCourse").value = userProfile?.course || "";
+        el("userProfilePhone").value = userProfile?.phone || "";
+        const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "?";
+        el("profile-pic-preview").src = userProfile?.photoUrl || `https://placehold.co/200x200/${getThemeHex()}/ffffff?text=${initial}`;
+        showScreen("profile");
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          const snap = await getDoc(doc(db, "users", user.uid));
+          if (snap.exists()) {
+            userProfile = { uid: user.uid, ...snap.data() };
+            if (userProfile.name) {
+              const lastId = localStorage.getItem("lastQueueId");
+              if (lastId && (userProfile.joinedQueues || []).includes(lastId)) enterQueue(lastId);
+              else { showScreen("queueSelection"); renderQueueList(); }
+            } else openProfileModal();
+          } else {
+            const data = { email: user.email, role: SUPER_ADMIN_UID.includes(user.uid) ? "superadmin" : "user", joinedQueues: [], phone: pendingRegistrationPhone };
+            await setDoc(doc(db, "users", user.uid), data);
+            userProfile = { uid: user.uid, ...data };
+            pendingRegistrationPhone = "";
+            openProfileModal();
+          }
+        } else showScreen("auth");
+        el("loading-section").style.display = "none";
+      });
+
+      async function enterQueue(id) {
+        const snap = await getDoc(doc(db, "queues", id));
+        if (!snap.exists()) return;
+        currentQueueId = id;
+        currentQueueSettings = snap.data();
+        await checkDailyReset(id, currentQueueSettings);
+        localStorage.setItem("lastQueueId", id);
+        el("header-queue-name").textContent = currentQueueSettings.name;
+        showScreen("main");
+        
+        if (unsubMembers) unsubMembers();
+        if (unsubSettings) unsubSettings();
+        if (unsubChat) unsubChat();
+
+        unsubMembers = onSnapshot(query(collection(db, "queues", id, "members"), orderBy("timestamp")), (s) => {
+          currentQueueMembers = s.docs.map(d => ({...d.data(), uid: d.id}));
+          renderQueueView(currentQueueMembers);
+          updatePeriodicUI();
+        });
+
+        unsubSettings = onSnapshot(doc(db, "queues", id), (s) => { 
+          if(s.exists()) {
+            currentQueueSettings = s.data();
+            updatePeriodicUI();
+          }
+        });
+
+        unsubChat = onSnapshot(query(collection(db, "queues", id, "chat"), orderBy("timestamp", "desc"), limit(50)), (s) => {
+          const msgs = s.docs.map(d => ({...d.data(), id: d.id})).reverse();
+          renderChat(msgs);
+        });
+
+        const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "U";
+        el("header-user-avatar").src = userProfile?.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
+        el("super-admin-panel").classList.toggle("hidden", userProfile.role !== "superadmin");
+      }
+
+      function updatePeriodicUI() {
+        if (!currentQueueSettings) return;
+        const now = getSyncedDate();
+        let isOpen = false;
+
+        const card = el("queue-status-card"), msg = el("queue-status-message");
+
+        if (!currentQueueSettings.openTime || !currentQueueSettings.closeTime) {
+            msg.textContent = "Agendamento pendente.";
+            card.className = "text-center p-4 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-500";
+        } else {
+            const [oh, om] = currentQueueSettings.openTime.split(":").map(Number);
+            const [ch, cm] = currentQueueSettings.closeTime.split(":").map(Number);
+            const openTime = new Date(now); openTime.setHours(oh, om, 0, 0);
+            const closeTime = new Date(now); closeTime.setHours(ch, cm, 0, 0);
+
+            if (now < openTime) {
+                msg.textContent = `Fila fechada. Abre às ${currentQueueSettings.openTime}`;
+                card.className = "text-center p-4 rounded-2xl bg-sky-500/20 text-sky-500 dark:text-sky-400";
+            } else if (now >= openTime && now < closeTime) {
+                isOpen = true;
+                msg.textContent = `Fila aberta! Fecha às ${currentQueueSettings.closeTime}`;
+                card.className = "text-center p-4 rounded-2xl bg-green-500/20 text-green-600 dark:text-green-400";
+            } else {
+                msg.textContent = "A fila foi encerrada por hoje.";
+                card.className = "text-center p-4 rounded-2xl bg-red-500/20 text-red-600 dark:text-red-400";
+            }
+        }
+
+        const idx = currentQueueMembers.findIndex(m => m.uid === currentUser?.uid);
+        const isIn = idx !== -1;
+        const bar = el("bottom-bar");
+
+        if (!isIn) {
+            if (isOpen) {
+                if (bar.classList.contains("hidden")) {
+                    bar.classList.remove("hidden");
+                    if (!buttonWasMoved) randomButtonPos();
+                }
+            } else {
+                if (!bar.classList.contains("hidden")) {
+                    bar.classList.add("hidden");
+                    buttonWasMoved = false; 
+                }
+            }
+        } else {
+            bar.classList.add("hidden");
+        }
+      }
+
+      function renderQueueView(members) {
+        const idx = members.findIndex(m => m.uid === currentUser.uid);
+        const isIn = idx !== -1;
+        el("user-position").textContent = isIn ? idx + 1 : "-";
+        el("total-in-queue").textContent = members.length;
+        
+        const btn = el("join-leave-btn");
+        const bar = el("bottom-bar");
+        
+        if (isIn) {
+          bar.classList.add("hidden"); 
+          el("header-leave-queue-btn").classList.remove("hidden"); 
+        } else {
+          el("header-leave-queue-btn").classList.add("hidden");
+          btn.textContent = "Entrar na Fila";
+          btn.className = "join-button-active font-bold py-4 px-10 rounded-2xl";
+        }
+
+        el("queue-list").innerHTML = members.map((m, i) => {
+          const initial = m.name ? m.name.charAt(0).toUpperCase() : "U";
+          const avatar = m.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
+          return `
+          <div class="glass-effect p-3 rounded-2xl flex items-center gap-4 ${m.uid === currentUser.uid ? 'border-2 border-primary-500 shadow-md' : ''}">
+            <div class="w-12 h-12 flex items-center justify-center font-bold bg-white dark:bg-white/10 shadow-sm border border-slate-200 dark:border-transparent rounded-xl flex-shrink-0 text-slate-800 dark:text-white text-lg">${i+1}</div>
+            <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700">
+            <div class="flex-grow min-w-0">
+              <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</p>
+              <p class="text-xs text-slate-600 dark:text-slate-400 truncate">${m.course} ${m.observation ? `<br><span class="italic text-primary-600 dark:text-primary-400 font-medium">💬 "${m.observation}"</span>` : ''}</p>
+            </div>
+            ${userProfile.role === 'superadmin' ? `<button class="text-red-500 hover:scale-110 delete-btn flex-shrink-0 transition-transform p-2 bg-red-100 dark:bg-red-500/20 rounded-lg" data-uid="${m.uid}" data-name="${m.name}">✕</button>` : ''}
+          </div>
+        `}).join("");
+
+        document.querySelectorAll('.delete-btn').forEach(b => {
+          b.onclick = () => {
+            const memberName = b.dataset.name;
+            showConfirmModal(
+              "Remover da Fila",
+              `Tem certeza que deseja remover ${memberName} da fila?`,
+              async () => {
+                await deleteDoc(doc(db, "queues", currentQueueId, "members", b.dataset.uid));
+                await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+                    text: `O Administrador removeu ${memberName} da fila.`, 
+                    type: "system", 
+                    timestamp: serverTimestamp() 
+                });
+                showToast(`${memberName} removido(a).`, "success");
+              }
+            );
+          };
+        });
+        
+        el("observation-section").classList.toggle("hidden", !isIn);
+      }
+
+      function renderChat(msgs) {
+        const chatEl = el("chat-messages");
+        chatEl.innerHTML = msgs.map(msg => {
+          if (msg.type === "system") {
+            return `<div class="text-[10px] text-center uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold my-2">${msg.text}</div>`;
+          }
+          const isMe = msg.uid === currentUser.uid;
+          const time = msg.timestamp ? msg.timestamp.toDate().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "--:--";
+          const initial = msg.userName ? msg.userName.charAt(0).toUpperCase() : "U";
+          const avatar = msg.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
+          
+          return `
+            <div class="flex items-start gap-2.5 ${isMe ? "justify-end" : ""}">
+              <img class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700 ${isMe ? "order-2" : "order-1"}" src="${avatar}" alt="${msg.userName}">
+              <div class="flex flex-col gap-1 ${isMe ? "order-1 items-end" : "order-2 items-start"} max-w-[85%]">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-semibold text-slate-900 dark:text-white">${isMe ? "Você" : msg.userName}</span>
+                  <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${time}</span>
+                </div>
+                <div class="leading-snug p-3 rounded-xl border border-transparent dark:border-slate-700/50 ${isMe ? "bg-primary-500 text-white rounded-br-none" : "bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-bl-none shadow-sm"} break-words">
+                  <p class="text-sm font-normal">${msg.text}</p>
+                </div>
+              </div>
+            </div>`;
+        }).join("");
+        chatEl.scrollTop = chatEl.scrollHeight;
+      }
+
+      async function showLogsModal() {
+        const logsListEl = el("logs-list");
+        logsListEl.innerHTML = '<div class="flex justify-center p-4"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div></div>';
+        el("logs-modal").classList.remove("hidden");
+
+        try {
+            const q = query(collection(db, "queues", currentQueueId, "chat"), orderBy("timestamp", "desc"), limit(200));
+            const snap = await getDocs(q);
+            const logs = snap.docs.map(d => d.data());
+            renderLogs(logs);
+        } catch (error) {
+            logsListEl.innerHTML = '<p class="text-red-500 text-center">Erro ao carregar o histórico.</p>';
+        }
+      }
+
+      function renderLogs(logs) {
+        const logsListEl = el("logs-list");
+        if (logs.length === 0) { logsListEl.innerHTML = '<p class="text-center text-slate-500">Nenhum registro encontrado.</p>'; return; }
+
+        logsListEl.innerHTML = logs.map(log => {
+            const time = log.timestamp ? log.timestamp.toDate().toLocaleString("pt-BR") : "";
+            if (log.type === "system") {
+                return `<div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex gap-3 items-start"><span class="text-lg">⚙️</span><div><p class="text-sm font-medium text-slate-700 dark:text-slate-300 italic">${log.text}</p><p class="text-[10px] text-slate-500">${time}</p></div></div>`;
+            }
+            const isMe = log.uid === currentUser.uid;
+            const initial = log.userName ? log.userName.charAt(0).toUpperCase() : "U";
+            const avatar = log.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
+            return `<div class="flex items-start gap-2.5"><img class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200 dark:border-slate-700" src="${avatar}" alt="${log.userName}"><div class="flex flex-col gap-1 max-w-[85%]"><div class="flex items-center space-x-2"><span class="text-xs font-semibold text-slate-900 dark:text-white">${isMe ? "Você" : log.userName}</span><span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${time}</span></div><div class="leading-snug p-3 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm break-words"><p class="text-sm font-normal">${log.text}</p></div></div></div>`;
+        }).join("");
+      }
+
+      el("view-logs-btn").onclick = showLogsModal;
+      el("close-logs-modal").onclick = () => el("logs-modal").classList.add("hidden");
+
+      el("login-btn").onclick = () => signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => showToast("E-mail ou senha incorretos", "error"));
+      
+      el("register-btn").onclick = async () => {
+        const email = el("registerEmail").value.trim();
+        const pwd = el("registerPassword").value;
+        const pwdConfirm = el("registerPasswordConfirm").value;
+        const phone = el("registerPhone").value.trim();
+        if (pwd !== pwdConfirm) { showToast("As senhas não coincidem.", "error"); return; }
+        if (pwd.length < 6) { showToast("A senha deve ter pelo menos 6 caracteres.", "error"); return; }
+        pendingRegistrationPhone = phone;
+        try { await createUserWithEmailAndPassword(auth, email, pwd); } catch (error) { showToast("Erro ao criar conta. O E-mail já pode estar em uso.", "error"); }
+      };
+      
+      el("join-leave-btn").onclick = async () => {
+        const isIn = currentQueueMembers.some(m => m.uid === currentUser.uid);
+        
+        if (isIn) return; 
+
+        const date = getSyncedDate();
+        if (!currentQueueSettings) return;
+        const [oh, om] = currentQueueSettings.openTime.split(":").map(Number);
+        const open = new Date(date); open.setHours(oh, om, 0, 0);
+        if (date < open) { showToast("A fila ainda não abriu!", "error"); return; }
+
+        await setDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), {
+          name: userProfile.name, 
+          course: userProfile.course, 
+          photoUrl: userProfile.photoUrl || "",
+          uid: currentUser.uid, 
+          timestamp: serverTimestamp()
+        });
+        await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+          text: `${userProfile.name} entrou na fila!`, 
+          type: "system", 
+          timestamp: serverTimestamp() 
+        });
+      };
+
+      el("header-leave-queue-btn").onclick = () => {
+        showConfirmModal(
+          "Sair da Fila",
+          "Tem certeza que deseja sair da fila? Você perderá sua posição atual.",
+          async () => {
+            await deleteDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid));
+            buttonWasMoved = false;
+            showToast("Você saiu da fila.", "success");
+          }
+        );
+      };
+
+      el("chat-form").onsubmit = async (e) => {
+        e.preventDefault();
+        const text = el("chat-input").value;
+        if(!text) return;
+        el("chat-input").value = "";
+        await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+          text, 
+          userName: userProfile.name.split(" ")[0], 
+          userPhotoUrl: userProfile.photoUrl || "",
+          uid: currentUser.uid, 
+          timestamp: serverTimestamp() 
+        });
+      };
+
+      el("save-observation-btn").onclick = () => updateDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { observation: el("userObservation").value });
+
+      el("save-profile-btn").onclick = async () => {
+        const name = el("userName").value.trim();
+        const course = el("userCourse").value.trim();
+        const phone = el("userProfilePhone").value.trim();
+
+        if(!name || !course) { showToast("Nome e Curso são obrigatórios", "error"); return; }
+        
+        const initial = name.charAt(0).toUpperCase();
+        const photo = tempPhotoDataUrl || userProfile?.photoUrl || `https://placehold.co/200x200/${getThemeHex()}/ffffff?text=${initial}`;
+        const data = { name, course, phone, photoUrl: photo };
+        
+        await updateDoc(doc(db, "users", currentUser.uid), data);
+        userProfile = {...userProfile, ...data};
+        
+        if (currentQueueId) {
+           const memberRef = doc(db, "queues", currentQueueId, "members", currentUser.uid);
+           const memberSnap = await getDoc(memberRef);
+           if (memberSnap.exists()) await updateDoc(memberRef, { name, course, photoUrl: photo });
+           el("header-user-avatar").src = photo;
+           showScreen("main");
+        } else {
+           showScreen("queueSelection");
+           renderQueueList();
+        }
+        showToast("Perfil salvo com sucesso!", "success");
+      };
+
+      el("main-logout-btn").onclick = () => {
+        localStorage.removeItem("lastQueueId");
+        currentQueueId = null;
+        currentQueueSettings = null;
+        
+        if (unsubMembers) unsubMembers();
+        if (unsubSettings) unsubSettings();
+        if (unsubChat) unsubChat();
+
+        signOut(auth).then(() => {
+            showScreen("auth");
+        });
+      };
+
+      el("back-to-selection-btn").onclick = () => { 
+        localStorage.removeItem("lastQueueId");
+        currentQueueId = null;
+        currentQueueSettings = null;
+        
+        if (unsubMembers) unsubMembers();
+        if (unsubSettings) unsubSettings();
+        if (unsubChat) unsubChat();
+        
+        showScreen("queueSelection");
+        renderQueueList();
+      };
+
+      async function renderQueueList() {
+        const list = el("queues-list"); list.innerHTML = "";
+        for(const id of (userProfile.joinedQueues || [])) {
+          const d = await getDoc(doc(db, "queues", id));
+          if(d.exists()) {
+            const div = document.createElement("div");
+            div.className = "glass-effect p-4 rounded-xl cursor-pointer hover:bg-slate-200/20 dark:hover:bg-white/10 transition-colors border-l-4 border-primary-500 shadow-sm";
+            div.innerHTML = `<h3 class="font-bold text-slate-900 dark:text-white">${d.data().name}</h3><p class="text-xs text-slate-500">Código: ${d.data().code}</p>`;
+            div.onclick = () => enterQueue(id);
+            list.appendChild(div);
+          }
+        }
+      }
+
+      function switchAuthTab(tabName) {
+        const loginForm = el("login-form");
+        const registerForm = el("register-form");
+        const btnLogin = el("show-login-tab");
+        const btnRegister = el("show-register-tab");
+
+        btnLogin.className = "flex-1 pb-2 text-center font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 transition-colors duration-300";
+        btnRegister.className = "flex-1 pb-2 text-center font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 transition-colors duration-300";
+
+        if (tabName === "login") {
+            btnLogin.className = "flex-1 pb-2 text-center font-semibold border-b-2 border-primary-500 text-primary-500 transition-colors duration-300";
+            registerForm.classList.add("hidden");
+            registerForm.classList.remove("fade-in-up");
+            loginForm.classList.remove("hidden");
+            requestAnimationFrame(() => { loginForm.classList.add("fade-in-up"); });
+        } else {
+            btnRegister.className = "flex-1 pb-2 text-center font-semibold border-b-2 border-primary-500 text-primary-500 transition-colors duration-300";
+            loginForm.classList.add("hidden");
+            loginForm.classList.remove("fade-in-up");
+            registerForm.classList.remove("hidden");
+            requestAnimationFrame(() => { registerForm.classList.add("fade-in-up"); });
+        }
+      }
+
+      el("show-login-tab").onclick = () => switchAuthTab("login");
+      el("show-register-tab").onclick = () => switchAuthTab("register");
+
+      function showScreen(s) {
+        el("auth-overlay").classList.add("hidden"); 
+        el("profile-overlay").classList.add("hidden"); 
+        el("main-content").classList.add("hidden"); 
+        el("queue-selection-screen").classList.add("hidden");
+
+        if (s === "auth" || s === "profile") {
+            el("global-clock-widget").classList.add("hidden");
+            el("global-clock-widget").classList.remove("flex");
+        } else {
+            el("global-clock-widget").classList.remove("hidden");
+            el("global-clock-widget").classList.add("flex");
+        }
+        
+        if(s === "auth") el("auth-overlay").classList.remove("hidden");
+        if(s === "profile") el("profile-overlay").classList.remove("hidden");
+        if(s === "main") el("main-content").classList.remove("hidden");
+        if(s === "queueSelection") el("queue-selection-screen").classList.remove("hidden");
+      }
+      
+      el("join-new-queue-btn").onclick = () => el("join-queue-modal").classList.remove("hidden");
+      el("cancel-join-queue").onclick = () => el("join-queue-modal").classList.add("hidden");
+      el("confirm-join-queue").onclick = async () => {
+          const code = el("queue-code-input").value.trim().toUpperCase();
+          const q = query(collection(db, "queues"), where("code", "==", code));
+          const snap = await getDocs(q);
+          if (!snap.empty) {
+              const id = snap.docs[0].id;
+              const joined = userProfile.joinedQueues || [];
+              if (!joined.includes(id)) {
+                  joined.push(id);
+                  await updateDoc(doc(db, "users", currentUser.uid), { joinedQueues: joined });
+              }
+              el("join-queue-modal").classList.add("hidden");
+              renderQueueList();
+          } else showToast("Código inválido", "error");
+      };
+      
+      el("edit-profile-btn").onclick = () => openProfileModal();
+      el("close-profile-btn").onclick = () => {
+        if (!userProfile?.name) { showToast("Você precisa salvar seu perfil primeiro.", "error"); } 
+        else { showScreen(currentQueueId ? "main" : "queueSelection"); }
+      };
+      
+      el("save-schedule-btn").onclick = () => {
+          updateDoc(doc(db, "queues", currentQueueId), {
+              openTime: el("queueOpenTime").value,
+              closeTime: el("queueCloseTime").value
+          }).then(() => showToast("Horários atualizados!", "success"));
+      };
+
+      el("restart-queue-btn").onclick = () => {
+          showConfirmModal(
+            "Zerar Fila",
+            "Tem certeza que deseja esvaziar a fila agora? Esta ação não pode ser desfeita.",
+            async () => {
+              const batch = writeBatch(db);
+              const members = await getDocs(collection(db, "queues", currentQueueId, "members"));
+              members.docs.forEach(d => batch.delete(d.ref));
+              await batch.commit();
+              await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+                  text: `O Administrador limpou a fila.`, 
+                  type: "system", 
+                  timestamp: serverTimestamp() 
+              });
+              showToast("Fila zerada com sucesso!", "success");
+            }
+          );
+      };
+
+    </script>
+  </body>
+</html>
+
+
       <div id="global-clock-widget" class="hidden mx-auto mb-6 w-max glass-effect px-6 py-2 rounded-3xl shadow-lg border border-primary-500/30 flex-col items-center justify-center whitespace-nowrap backdrop-blur-md">
         <div class="text-[10px] uppercase tracking-widest text-primary-500 font-bold mb-0.5">Horário do Servidor</div>
         <div id="server-clock-display" class="text-xl font-mono font-black text-slate-900 dark:text-white tracking-wider">00:00:00</div>
@@ -990,5 +1851,6 @@
     </script>
   </body>
 </html>
+
 
 
