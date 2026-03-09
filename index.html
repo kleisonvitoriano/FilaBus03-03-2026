@@ -17,12 +17,43 @@
     <script>
       tailwind.config = {
         darkMode: 'class',
-        theme: { extend: { colors: { primary: { 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5' } } } }
+        theme: { 
+            extend: { 
+                colors: { 
+                    primary: { 
+                        100: 'rgb(var(--p-100) / <alpha-value>)', 
+                        200: 'rgb(var(--p-200) / <alpha-value>)', 
+                        400: 'rgb(var(--p-400) / <alpha-value>)', 
+                        500: 'rgb(var(--p-500) / <alpha-value>)', 
+                        600: 'rgb(var(--p-600) / <alpha-value>)',
+                        900: 'rgb(var(--p-900) / <alpha-value>)'
+                    } 
+                } 
+            } 
+        }
       }
     </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
+      /* --- VARIÁVEIS DE TEMA --- */
+      :root.theme-indigo {
+        --p-100: 224 231 255; --p-200: 199 210 254; --p-400: 129 140 248;
+        --p-500: 99 102 241; --p-600: 79 70 229; --p-900: 49 46 129;
+      }
+      :root.theme-emerald {
+        --p-100: 209 250 229; --p-200: 167 243 208; --p-400: 52 211 153;
+        --p-500: 16 185 129; --p-600: 5 150 105; --p-900: 6 78 59;
+      }
+      :root.theme-rose {
+        --p-100: 255 228 230; --p-200: 254 205 211; --p-400: 251 113 133;
+        --p-500: 244 63 94; --p-600: 225 29 72; --p-900: 136 19 55;
+      }
+      :root.theme-amber {
+        --p-100: 254 243 199; --p-200: 253 230 138; --p-400: 251 191 36;
+        --p-500: 245 158 11; --p-600: 217 119 6; --p-900: 120 53 15;
+      }
+
       body { 
         font-family: "Inter", sans-serif; 
         background-color: #f8fafc; 
@@ -43,16 +74,16 @@
       
       .input-style { background-color: #f1f5f9; color: #0f172a; border-radius: 0.75rem; padding: 0.875rem 1rem; width: 100%; outline: none; border: 1px solid #cbd5e1; transition: border-color 0.2s; }
       .dark .input-style { background-color: #0f172a; color: white; border: 1px solid #334155; }
-      .input-style:focus { border-color: #6366f1; }
+      .input-style:focus { border-color: rgb(var(--p-500)); }
 
       #random-join-btn {
-        background: #6366f1;
+        background: rgb(var(--p-500));
         color: white;
         font-weight: 800;
         font-size: 1.125rem;
         padding: 1rem 2rem;
         border-radius: 1rem;
-        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.6);
+        box-shadow: 0 10px 25px -5px rgb(var(--p-500) / 0.6);
         transition: transform 0.2s ease;
         border: 2px solid rgba(255, 255, 255, 0.2);
         z-index: 50;
@@ -63,13 +94,13 @@
       #toast.show { top: 20px; }
       #toast.success { background: #10b981; }
       #toast.error { background: #ef4444; }
-      #toast.info { background: #6366f1; }
+      #toast.info { background: rgb(var(--p-500)); }
 
       .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; display: none;}
       
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb { background: rgb(var(--p-500)); border-radius: 10px; }
       
       button { transition: all 0.2s ease; cursor: pointer; }
       button:active { transform: scale(0.96); }
@@ -78,7 +109,7 @@
   <body class="antialiased min-h-screen">
 
     <div id="loading-section" class="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-50 dark:bg-[#0f172a] transition-opacity duration-300">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-500"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-primary-500"></div>
     </div>
 
     <button type="button" id="random-join-btn" class="hidden fixed">Entrar na Fila</button>
@@ -90,7 +121,7 @@
       <div id="auth-overlay" style="display: none;" class="flex-col items-center justify-center min-h-[80vh] py-4">
         <div class="w-full card-style fade-in-up">
           <div class="flex border-b border-slate-300 dark:border-slate-700 mb-6">
-            <button type="button" id="show-login-tab" class="flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500">Entrar</button>
+            <button type="button" id="show-login-tab" class="flex-1 pb-3 text-center font-bold text-primary-500 border-b-2 border-primary-500">Entrar</button>
             <button type="button" id="show-register-tab" class="flex-1 pb-3 text-center font-bold text-slate-500 dark:text-slate-400 border-b-2 border-transparent">Registrar</button>
           </div>
 
@@ -98,12 +129,12 @@
             <input type="email" id="loginEmail" placeholder="E-mail" class="input-style mb-4" autocomplete="email" />
             <div class="relative mb-6 w-full">
               <input type="password" id="loginPassword" placeholder="Senha" class="input-style pr-12" autocomplete="current-password" />
-              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-indigo-500 toggle-password-btn" data-target="loginPassword">
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-primary-500 toggle-password-btn" data-target="loginPassword">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
             </div>
-            <button type="button" id="login-btn" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-lg">Entrar</button>
-            <button type="button" id="forgot-password-link" class="w-full text-center mt-5 text-sm text-indigo-500 hover:underline">Esqueceu a senha?</button>
+            <button type="button" id="login-btn" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-3.5 rounded-xl shadow-lg">Entrar</button>
+            <button type="button" id="forgot-password-link" class="w-full text-center mt-5 text-sm text-primary-500 hover:underline">Esqueceu a senha?</button>
           </div>
 
           <div id="register-form" style="display: none;">
@@ -129,7 +160,7 @@
       <!-- TELA MINHAS FILAS -->
       <div id="queue-selection-screen" style="display: none;" class="space-y-6 fade-in-up">
         <div class="mx-auto w-max bg-[#1e293b] px-6 py-3 rounded-[2rem] shadow-lg flex-col items-center justify-center text-center">
-            <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
+            <div class="text-[10px] uppercase tracking-widest text-primary-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
                 <span class="sync-dot w-2 h-2 rounded-full bg-green-500" id="sync-status-dot"></span> <span id="sync-status-text">HORÁRIO DE BRASÍLIA</span>
             </div>
             <div class="server-clock-display text-3xl font-mono font-bold text-white tracking-widest">Carregando...</div>
@@ -141,7 +172,7 @@
         
         <div class="space-y-4 pt-6 border-t border-slate-300 dark:border-slate-800">
           <button type="button" id="join-new-queue-btn" class="w-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white font-bold py-4 rounded-xl shadow-md">Entrar por Código</button>
-          <button type="button" id="create-new-queue-btn" style="display: none;" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-md">Criar Fila</button>
+          <button type="button" id="create-new-queue-btn" style="display: none;" class="w-full bg-primary-500 text-white font-bold py-4 rounded-xl shadow-md">Criar Fila</button>
           <button type="button" id="main-logout-btn" class="w-full text-center text-sm text-red-500 font-bold hover:underline py-3">Sair da Conta</button>
         </div>
       </div>
@@ -151,13 +182,13 @@
         
         <header class="flex justify-between items-center relative z-20">
           <div>
-            <button type="button" id="back-to-selection-btn" class="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-indigo-400 mb-1">
+            <button type="button" id="back-to-selection-btn" class="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-primary-400 mb-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Voltar
             </button>
             <h1 id="header-queue-name" class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Fila</h1>
           </div>
           <div class="flex items-center gap-3">
-            <button type="button" id="edit-profile-btn" class="text-slate-400 hover:text-indigo-400 p-1">
+            <button type="button" id="edit-profile-btn" class="text-slate-400 hover:text-primary-400 p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </button>
             <img id="header-user-avatar" class="w-12 h-12 rounded-full object-cover shadow-md" />
@@ -166,7 +197,7 @@
         </header>
 
         <div class="mx-auto w-max bg-[#1e293b] px-8 py-3 rounded-[2rem] shadow-lg flex-col items-center justify-center text-center mt-2 mb-6">
-            <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
+            <div class="text-[10px] uppercase tracking-widest text-primary-400 font-bold mb-0.5 flex items-center justify-center gap-1.5">
                 <span class="sync-dot w-2 h-2 rounded-full bg-green-500"></span> HORÁRIO DE BRASÍLIA
             </div>
             <div class="server-clock-display text-4xl font-mono font-black text-white tracking-widest">Carregando...</div>
@@ -181,7 +212,7 @@
           <button type="button" id="save-schedule-btn" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-md">Salvar Horários</button>
           <div class="grid grid-cols-2 gap-3">
             <button type="button" id="restart-queue-btn" class="bg-[#ef4444] hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-md">Zerar Fila</button>
-            <button type="button" id="view-logs-btn" class="bg-[#475569] hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">Histórico Completo</button>
+            <button type="button" id="view-logs-btn" class="bg-[#475569] hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">Histórico</button>
           </div>
         </div>
 
@@ -190,13 +221,13 @@
             <button type="button" id="share-location-btn" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-md">Compartilhar Localização</button>
         </div>
 
-        <div class="bg-indigo-500 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center">
+        <div class="bg-primary-500 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center">
           <div>
-            <p class="text-indigo-100 text-sm font-medium mb-1">Sua Posição</p>
+            <p class="text-primary-100 text-sm font-medium mb-1">Sua Posição</p>
             <p id="user-position" class="text-5xl font-black leading-none">-</p>
           </div>
           <div class="text-right">
-            <p class="text-indigo-100 text-sm font-medium mb-1">Total na Fila</p>
+            <p class="text-primary-100 text-sm font-medium mb-1">Total na Fila</p>
             <p id="total-in-queue" class="text-4xl font-bold leading-none">0</p>
           </div>
         </div>
@@ -205,18 +236,24 @@
           <p id="queue-status-message"></p>
         </div>
 
-        <!-- Botão de Chat Global -->
-        <button type="button" id="open-chat-btn" class="w-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold py-3.5 rounded-xl shadow-md flex justify-center items-center gap-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            Abrir Chat / Histórico
-        </button>
+        <!-- CHAT EMBUTIDO NA TELA PRINCIPAL (RESTAURADO DA VERSÃO ANTIGA) -->
+        <div id="chat-section" class="card-style space-y-3">
+            <h3 class="text-lg font-bold text-center text-slate-800 dark:text-white">Chat da Fila</h3>
+            <div id="chat-messages" class="h-64 overflow-y-auto space-y-4 p-2 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-xl mb-3 scroll-smooth"></div>
+            <form id="chat-form" class="flex gap-2 w-full">
+                <input type="text" id="chat-input" placeholder="Digite uma mensagem..." class="flex-1 min-w-0 input-style py-2" autocomplete="off" />
+                <button type="submit" id="send-chat-btn" class="shrink-0 bg-primary-500 hover:bg-primary-600 text-white font-bold h-full aspect-square rounded-xl shadow-md flex items-center justify-center transition-transform active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
 
-        <!-- Observação Externa -->
+        <!-- OBSERVAÇÃO (Fixa na lista da fila) -->
         <div id="observation-section" style="display: none;" class="card-style space-y-3">
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Aviso Rápido</label>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Sua Observação na Fila</label>
           <div class="flex items-center gap-2 w-full">
-            <input type="text" id="userObservation" placeholder="Ex: Fui no banheiro..." class="flex-1 min-w-0 input-style" />
-            <button type="button" id="save-observation-btn" class="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-xl">Enviar</button>
+            <input type="text" id="userObservation" placeholder="Ex: Estou em prova, chego em 10 min..." class="flex-1 min-w-0 input-style" />
+            <button type="button" id="save-observation-btn" class="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-xl">Guardar</button>
           </div>
         </div>
 
@@ -231,7 +268,7 @@
         <div class="w-full max-w-md mx-auto card-style space-y-5 fade-in-up">
             <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-white">Perfil</h2>
             <div class="flex justify-center relative group cursor-pointer w-max mx-auto" id="profile-pic-container">
-                <img id="profile-pic-preview" class="w-24 h-24 rounded-full object-cover border-2 border-indigo-500 shadow-md" />
+                <img id="profile-pic-preview" class="w-24 h-24 rounded-full object-cover border-2 border-primary-500 shadow-md" />
                 <div class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100">
                     <span class="text-white text-[10px] font-bold">MUDAR</span>
                 </div>
@@ -242,27 +279,39 @@
               <input type="text" id="userCourse" placeholder="Curso / Setor" class="input-style" />
               <input type="tel" id="userProfilePhone" placeholder="Celular (Opcional)" class="input-style" />
             </div>
+
+            <!-- OPÇÕES DE TEMAS E MODO ESCURO -->
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-4">
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tema de Cores</label>
+                    <div class="flex items-center gap-3">
+                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#6366f1] ring-2 ring-offset-2 ring-transparent ring-offset-white dark:ring-offset-slate-900 transition-all" data-theme="theme-indigo"></button>
+                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#10b981] ring-2 ring-offset-2 ring-transparent ring-offset-white dark:ring-offset-slate-900 transition-all" data-theme="theme-emerald"></button>
+                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#f43f5e] ring-2 ring-offset-2 ring-transparent ring-offset-white dark:ring-offset-slate-900 transition-all" data-theme="theme-rose"></button>
+                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-[#f59e0b] ring-2 ring-offset-2 ring-transparent ring-offset-white dark:ring-offset-slate-900 transition-all" data-theme="theme-amber"></button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0f172a]">
+                    <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Modo Escuro</span>
+                    <input type="checkbox" id="dark-mode-toggle" class="w-5 h-5 rounded border-slate-300 text-primary-500 focus:ring-primary-500" />
+                </div>
+            </div>
+
             <div class="pt-2 space-y-3">
-              <button type="button" id="save-profile-btn" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-lg">Guardar Alterações</button>
+              <button type="button" id="save-profile-btn" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-3.5 rounded-xl shadow-lg">Guardar Alterações</button>
               <button type="button" id="close-profile-btn" class="w-full text-slate-500 dark:text-slate-400 font-bold py-2 hover:underline">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal do Chat -->
+    <!-- Modal do Histórico (Admin/Logs) -->
     <div id="logs-modal" style="display: none;" class="modal-overlay z-[9999]">
         <div class="w-full max-w-lg card-style space-y-4 fade-in-up flex flex-col h-[85vh]">
             <div class="flex justify-between items-center shrink-0 border-b border-slate-200 dark:border-slate-700 pb-3">
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Chat da Fila</h2>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Histórico da Fila</h2>
                 <button type="button" id="close-logs-modal" class="text-slate-400 hover:text-red-500 text-3xl font-bold leading-none">&times;</button>
             </div>
             <div id="logs-list" class="flex-grow overflow-y-auto space-y-3 pr-2 scroll-smooth"></div>
-            <div class="flex items-center gap-2 pt-3 border-t border-slate-200 dark:border-slate-700 shrink-0 mt-auto">
-                <input type="text" id="modal-chat-input" placeholder="Escreva uma mensagem..." class="flex-1 min-w-0 input-style py-3" />
-                <button type="button" id="send-modal-chat-btn" class="shrink-0 bg-indigo-500 hover:bg-indigo-600 text-white font-bold h-full aspect-square rounded-xl shadow-md flex items-center justify-center transition-transform active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -272,7 +321,7 @@
         <input type="text" id="queue-code-input" placeholder="CÓDIGO DA FILA" class="input-style text-center tracking-[0.3em] font-mono font-bold uppercase py-4 text-lg" />
         <div class="grid grid-cols-2 gap-3">
           <button type="button" id="cancel-join-queue" class="bg-slate-700 text-white font-bold py-3.5 rounded-xl">Cancelar</button>
-          <button type="button" id="confirm-join-queue" class="bg-indigo-500 text-white font-bold py-3.5 rounded-xl shadow-lg">Entrar</button>
+          <button type="button" id="confirm-join-queue" class="bg-primary-500 text-white font-bold py-3.5 rounded-xl shadow-lg">Entrar</button>
         </div>
       </div>
     </div>
@@ -312,13 +361,21 @@
       let currentUser = null, userProfile = null, currentQueueId = null;
       let currentQueueMembers = [], currentQueueSettings = null; 
       
-      let timeOffsetMs = 0; 
+      let baseServerTime = Date.now(); 
+      let syncLocalTimer = performance.now();
       let isTimeSynced = false;
       
       let tempPhotoDataUrl = null;
       let unsubMembers = null, unsubSettings = null, unsubChat = null;
       let pendingRegistrationPhone = ""; 
       const SUPER_ADMIN_UID = ["twqMzdcSPVT31cuQJKsE8HKxQBH3", "fezXWTgqXUMCUBUKSBau6Sv4K9n2"];
+
+      // Nova Função para limpar escutadores e evitar erros de permissão
+      function clearListeners() {
+          if (unsubMembers) { unsubMembers(); unsubMembers = null; }
+          if (unsubSettings) { unsubSettings(); unsubSettings = null; }
+          if (unsubChat) { unsubChat(); unsubChat = null; }
+      }
 
       function showToast(message, type = "info") {
         const toast = el("toast");
@@ -355,8 +412,58 @@
         });
       });
 
+      // --- LOGICA DOS TEMAS E MODO ESCURO ---
+      function getThemeHex() {
+          const theme = localStorage.getItem("appTheme") || "theme-indigo";
+          const map = { 'theme-indigo': '6366f1', 'theme-emerald': '10b981', 'theme-rose': 'f43f5e', 'theme-amber': 'f59e0b' };
+          return map[theme] || '6366f1';
+      }
+
+      function updateThemeButtons() {
+          const currentTheme = localStorage.getItem("appTheme") || "theme-indigo";
+          document.querySelectorAll(".theme-btn").forEach(btn => {
+              btn.classList.remove('ring-[#6366f1]', 'ring-[#10b981]', 'ring-[#f43f5e]', 'ring-[#f59e0b]');
+              if (btn.dataset.theme === currentTheme) {
+                  const ringColor = btn.dataset.theme === 'theme-indigo' ? 'ring-[#6366f1]' : (btn.dataset.theme === 'theme-emerald' ? 'ring-[#10b981]' : (btn.dataset.theme === 'theme-rose' ? 'ring-[#f43f5e]' : 'ring-[#f59e0b]'));
+                  btn.classList.replace("ring-transparent", ringColor);
+              } else {
+                  btn.classList.add("ring-transparent");
+              }
+          });
+      }
+      updateThemeButtons();
+
+      document.querySelectorAll(".theme-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+              const oldTheme = localStorage.getItem("appTheme") || "theme-indigo";
+              document.documentElement.classList.remove(oldTheme);
+              const newTheme = btn.dataset.theme;
+              document.documentElement.classList.add(newTheme);
+              localStorage.setItem("appTheme", newTheme);
+              updateThemeButtons();
+              
+              if (el("profile-pic-preview").src.includes("placehold.co")) {
+                  const initial = el("userName").value.trim().charAt(0).toUpperCase() || (userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "?");
+                  el("profile-pic-preview").src = `https://placehold.co/200x200/${getThemeHex()}/ffffff?text=${initial}`;
+              }
+              if (el("header-user-avatar").src.includes("placehold.co") && userProfile?.name) {
+                   el("header-user-avatar").src = `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${userProfile.name.charAt(0).toUpperCase()}`;
+              }
+          });
+      });
+
+      const darkModeToggle = el("dark-mode-toggle");
+      if (darkModeToggle) {
+          darkModeToggle.checked = document.documentElement.classList.contains("dark");
+          darkModeToggle.addEventListener("change", (e) => {
+              const isDark = e.target.checked;
+              if (isDark) document.documentElement.classList.add("dark");
+              else document.documentElement.classList.remove("dark");
+              localStorage.setItem("appDarkMode", isDark);
+          });
+      }
+
       // --- LEITOR DE FOTO COM COMPRESSÃO INTELIGENTE ---
-      // Impede que fotos pesadas ultrapassem o limite de 1MB do Firestore e falhem no salvamento
       bindClick("profile-pic-container", () => el("profile-pic-input").click());
       el("profile-pic-input").addEventListener("change", function(e) {
           const file = e.target.files[0];
@@ -366,7 +473,7 @@
               const img = new Image();
               img.onload = function() {
                   const canvas = document.createElement("canvas");
-                  const MAX_SIZE = 256; // Reduz a foto para um tamanho perfeito de perfil
+                  const MAX_SIZE = 256;
                   let width = img.width;
                   let height = img.height;
 
@@ -381,7 +488,6 @@
                   const ctx = canvas.getContext("2d");
                   ctx.drawImage(img, 0, 0, width, height);
                   
-                  // O formato JPEG a 80% de qualidade resolve o erro do Firestore
                   tempPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.8);
                   el("profile-pic-preview").src = tempPhotoDataUrl;
               };
@@ -403,12 +509,15 @@
             if (res.ok) {
               const data = await res.json();
               const dateStr = data.datetime || data.dateTime;
-              timeOffsetMs = new Date(dateStr).getTime() - Date.now();
+              baseServerTime = new Date(dateStr).getTime();
+              syncLocalTimer = performance.now();
               finishSync(true); return;
             }
           } catch (e) { console.warn(`Falha na fonte ${src}`); }
         }
-        timeOffsetMs = 0; finishSync(true); 
+        baseServerTime = Date.now();
+        syncLocalTimer = performance.now();
+        finishSync(true); 
       }
 
       function finishSync(success) {
@@ -419,7 +528,8 @@
       }
 
       function getFormattedTime() {
-        const adjustedNow = new Date(Date.now() + timeOffsetMs);
+        const elapsed = performance.now() - syncLocalTimer;
+        const adjustedNow = new Date(baseServerTime + elapsed);
         const options = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const timeString = adjustedNow.toLocaleTimeString('pt-BR', options);
         const parts = new Intl.DateTimeFormat('pt-BR', options).formatToParts(adjustedNow);
@@ -471,7 +581,8 @@
         el("userCourse").value = userProfile?.course || "";
         el("userProfilePhone").value = userProfile?.phone || "";
         const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "?";
-        el("profile-pic-preview").src = userProfile?.photoUrl || `https://placehold.co/200x200/6366f1/ffffff?text=${initial}`;
+        el("profile-pic-preview").src = userProfile?.photoUrl || `https://placehold.co/200x200/${getThemeHex()}/ffffff?text=${initial}`;
+        updateThemeButtons();
         el("profile-overlay").style.display = "flex";
       }
 
@@ -503,8 +614,14 @@
                 pendingRegistrationPhone = "";
                 openProfileModal();
               }
-            } else { showScreen("auth"); }
-        } catch (err) { showScreen("auth"); } finally { if(el("loading-section")) el("loading-section").style.display = "none"; }
+            } else { 
+                clearListeners(); 
+                showScreen("auth"); 
+            }
+        } catch (err) { 
+            clearListeners(); 
+            showScreen("auth"); 
+        } finally { if(el("loading-section")) el("loading-section").style.display = "none"; }
       });
 
       async function enterQueue(id) {
@@ -518,75 +635,113 @@
             el("header-queue-name").textContent = currentQueueSettings.name;
             showScreen("main");
             
-            if (unsubMembers) unsubMembers(); 
-            if (unsubSettings) unsubSettings(); 
-            if (unsubChat) unsubChat();
+            clearListeners(); 
 
             unsubMembers = onSnapshot(query(collection(db, "queues", id, "members"), orderBy("timestamp")), (s) => {
               currentQueueMembers = s.docs.map(d => ({...d.data(), uid: d.id}));
               renderQueueView(currentQueueMembers);
               updatePeriodicUI(getFormattedTime());
-            });
+            }, (error) => { console.warn("Erro escuta de membros", error); });
 
             unsubSettings = onSnapshot(doc(db, "queues", id), (s) => { 
               if(s.exists()) { currentQueueSettings = s.data(); updatePeriodicUI(getFormattedTime()); }
-            });
+            }, (error) => { console.warn("Erro escuta de configurações", error); });
 
-            // --- RENDERIZA O CHAT COM A FOTO SEMPRE ATUALIZADA ---
             unsubChat = onSnapshot(query(collection(db, "queues", id, "chat"), orderBy("timestamp", "desc"), limit(50)), (s) => {
-                const list = el("logs-list");
-                if(list) {
-                    list.innerHTML = "";
-                    const docsArray = [...s.docs].reverse();
-                    
-                    docsArray.forEach(d => {
-                        const data = d.data();
-                        let t = "Agora";
-                        if (data.timestamp && typeof data.timestamp.toDate === 'function') {
-                            t = new Date(data.timestamp.toDate()).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-                        }
-
-                        const isSystem = data.type === 'system';
-                        const isMe = data.sender === userProfile?.name && !isSystem;
-
-                        if (isSystem) {
-                            const div = document.createElement("div");
-                            div.className = `p-2 mx-auto text-center rounded-xl text-xs bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 max-w-[80%]`;
-                            div.innerHTML = data.text;
-                            list.appendChild(div);
-                        } else {
-                            const wrapper = document.createElement("div");
-                            wrapper.className = `flex w-full gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'} items-end`;
-
-                            // Lógica inteligente: Pega a foto ATUAL do usuário se ele estiver na fila. Se não, usa a que salvou quando ele mandou a mensagem.
-                            const activeMember = currentQueueMembers.find(m => m.name === data.sender);
-                            const livePhoto = activeMember ? activeMember.photoUrl : null;
-                            const avatarSrc = livePhoto || data.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${data.sender ? data.sender.charAt(0).toUpperCase() : "U"}`;
-
-                            const avatarImg = document.createElement("img");
-                            avatarImg.src = avatarSrc;
-                            avatarImg.className = "w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600 shadow-sm";
-
-                            const msgDiv = document.createElement("div");
-                            msgDiv.className = `p-3 rounded-xl text-sm max-w-[75%] shadow-sm ${isMe ? 'bg-indigo-500 text-white rounded-br-none' : 'bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-bl-none'}`;
-                            msgDiv.innerHTML = `<div class="flex items-baseline gap-2 mb-1"><span class="font-bold text-xs ${isMe ? 'text-indigo-200' : 'text-indigo-500'}">${isMe ? 'Você' : data.sender}</span><span class="text-[10px] opacity-70 ml-auto pl-2">${t}</span></div><div class="break-words">${data.text}</div>`;
-                            
-                            wrapper.appendChild(avatarImg);
-                            wrapper.appendChild(msgDiv);
-                            list.appendChild(wrapper);
-                        }
-                    });
-                    
-                    setTimeout(() => { list.scrollTop = list.scrollHeight; }, 50);
-                }
-            });
+                const docsArray = [...s.docs].reverse();
+                const messages = docsArray.map(d => d.data());
+                renderChat(messages);
+                renderLogs(messages);
+            }, (error) => { console.warn("Erro escuta de chat", error); });
 
             const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "U";
-            el("header-user-avatar").src = userProfile?.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${initial}`;
+            el("header-user-avatar").src = userProfile?.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${initial}`;
             if (userProfile.role === "superadmin") { el("super-admin-panel").style.display = "block"; el("queueOpenTime").value = currentQueueSettings.openTime || ""; el("queueCloseTime").value = currentQueueSettings.closeTime || ""; } 
             else el("super-admin-panel").style.display = "none";
             if (userProfile.role === "driver") el("driver-panel").style.display = "block"; else el("driver-panel").style.display = "none";
         } catch(e) { showScreen("queueSelection"); } finally { if(el("loading-section")) el("loading-section").style.display = "none"; }
+      }
+
+      function renderChat(messages) {
+          const chatEl = el('chat-messages');
+          if(!chatEl) return;
+          chatEl.innerHTML = messages.map(msg => {
+              if(msg.type === 'system') return '';
+
+              const isMe = msg.uid === currentUser.uid;
+              let t = "Agora";
+              if (msg.timestamp && typeof msg.timestamp.toDate === 'function') {
+                  t = new Date(msg.timestamp.toDate()).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+              }
+              
+              const activeMember = currentQueueMembers.find(m => m.uid === msg.uid);
+              const livePhoto = activeMember ? activeMember.photoUrl : null;
+              
+              // Evita erros com mensagens antigas que usavam userName em vez de sender
+              const senderName = msg.sender || msg.userName || "Usuário";
+              const avatarSrc = livePhoto || msg.photoUrl || msg.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${senderName.charAt(0).toUpperCase()}`;
+
+              return `
+                  <div class="flex items-start gap-2.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}">
+                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600 shadow-sm" src="${avatarSrc}" alt="${senderName}">
+                      <div class="flex flex-col gap-1 ${isMe ? 'items-end' : 'items-start'} w-full max-w-[85%]">
+                          <div class="flex items-center space-x-2">
+                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : senderName.split(' ')[0]}</span>
+                              <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${t}</span>
+                          </div>
+                          <div class="leading-snug p-3 rounded-xl text-sm shadow-sm ${isMe ? 'bg-primary-500 text-white rounded-tr-none' : 'bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-none'} w-full">
+                              <p class="break-words">${msg.text}</p>
+                          </div>
+                      </div>
+                  </div>`;
+          }).join('');
+          setTimeout(() => { chatEl.scrollTop = chatEl.scrollHeight; }, 50);
+      }
+
+      function renderLogs(logs) {
+          const logsListEl = el('logs-list');
+          if(!logsListEl) return;
+          if (logs.length === 0) {
+              logsListEl.innerHTML = '<p class="text-slate-500 text-center py-4">Nenhuma atividade registada.</p>';
+              return;
+          }
+
+          logsListEl.innerHTML = logs.map(log => {
+              let t = "Agora";
+              if (log.timestamp && typeof log.timestamp.toDate === 'function') {
+                  t = new Date(log.timestamp.toDate()).toLocaleString('pt-BR');
+              }
+
+              if (log.type === 'system') {
+                  return `
+                      <div class="text-sm p-3 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-start gap-3">
+                          <span class="mt-0.5">⚙️</span>
+                          <div>
+                              <p class="font-medium text-slate-700 dark:text-slate-300">${log.text}</p>
+                              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">${t}</p>
+                          </div>
+                      </div>`;
+              }
+              
+              const isMe = log.uid === currentUser.uid;
+              const senderName = log.sender || log.userName || "Usuário";
+              const avatarSrc = log.photoUrl || log.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${senderName.charAt(0).toUpperCase()}`;
+
+              return `
+                  <div class="flex items-start gap-2.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}">
+                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600" src="${avatarSrc}" alt="${senderName}">
+                      <div class="flex flex-col gap-1 ${isMe ? 'items-end' : 'items-start'} max-w-[85%]">
+                          <div class="flex items-center space-x-2">
+                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : senderName.split(' ')[0]}</span>
+                              <span class="text-[10px] font-normal text-slate-500">${t}</span>
+                          </div>
+                          <div class="leading-snug p-3 rounded-xl text-sm shadow-sm ${isMe ? 'bg-primary-500 text-white rounded-tr-none' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-tl-none'}">
+                              <p class="break-words">${log.text}</p>
+                          </div>
+                      </div>
+                  </div>`;
+          }).join('');
+           setTimeout(() => { logsListEl.scrollTop = logsListEl.scrollHeight; }, 50);
       }
 
       function updatePeriodicUI(brt) {
@@ -609,7 +764,7 @@
             } else if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
                 isOpen = true;
                 msg.textContent = `Fila aberta! Fecha às ${currentQueueSettings.closeTime}`;
-                card.className = "text-center p-4 rounded-2xl bg-[#0f172a] text-indigo-400 border border-indigo-500/30";
+                card.className = "text-center p-4 rounded-2xl bg-[#0f172a] text-primary-400 border border-primary-500/30";
             } else {
                 msg.textContent = "A fila foi encerrada por hoje.";
                 card.className = "text-center p-4 rounded-2xl bg-[#0f172a] text-red-400 border border-red-500/30";
@@ -623,16 +778,59 @@
         if (isIn) { el("observation-section").style.display = "block"; } else { el("observation-section").style.display = "none"; }
       }
 
+      // Adicionando a função handleMoveInQueue que estava faltando no escopo global
+      async function handleMoveInQueue(uid, direction) {
+          const queue = [...currentQueueMembers];
+          const userIndex = queue.findIndex(u => u.uid === uid);
+          if (userIndex === -1) return;
+          
+          let swapIndex;
+          if (direction === 'up' && userIndex > 0) swapIndex = userIndex - 1;
+          else if (direction === 'down' && userIndex < queue.length - 1) swapIndex = userIndex + 1;
+          else return;
+
+          const userToMove = queue[userIndex];
+          const userToSwapWith = queue[swapIndex];
+          
+          const batch = writeBatch(db);
+          batch.update(doc(db, "queues", currentQueueId, "members", userToMove.uid), { timestamp: userToSwapWith.timestamp });
+          batch.update(doc(db, "queues", currentQueueId, "members", userToSwapWith.uid), { timestamp: userToMove.timestamp });
+          
+          try { 
+              await batch.commit();
+              await addDoc(collection(db, "queues", currentQueueId, "chat"), { 
+                  text: `Admin (${userProfile.name.split(' ')[0]}) moveu ${userToMove.name} da posição ${userIndex + 1} para ${swapIndex + 1}.`, 
+                  type: "system", 
+                  timestamp: serverTimestamp() 
+              });
+              showToast("Usuário movido.", "info"); 
+          } 
+          catch(error) { showToast("Erro ao mover usuário.", "error"); }
+      }
+
+      // Tornando a função acessível no escopo global para os botões gerados dinamicamente
+      window.handleMoveInQueue = handleMoveInQueue;
+
       function renderQueueView(members) {
         const idx = members.findIndex(m => m.uid === currentUser.uid);
         el("user-position").textContent = idx !== -1 ? idx + 1 : "-";
         el("total-in-queue").textContent = members.length;
         el("header-leave-queue-btn").style.display = idx !== -1 ? "block" : "none";
+        
+        // Atualiza a caixa de texto de observação se não estiver focada
+        if (idx !== -1 && el("userObservation") && document.activeElement !== el("userObservation")) {
+            el("userObservation").value = members[idx].observation || '';
+        }
+
         el("queue-list").innerHTML = members.length === 0 
           ? `<div class="text-center text-slate-500 py-8 font-medium">A fila está vazia.</div>` 
           : members.map((m, i) => {
-          const avatar = m.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${m.name ? m.name.charAt(0).toUpperCase() : "U"}`;
-          const borderClass = m.uid === currentUser.uid ? 'border border-indigo-500 shadow-md' : 'border border-transparent';
+          const avatar = m.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${m.name ? m.name.charAt(0).toUpperCase() : "U"}`;
+          const borderClass = m.uid === currentUser.uid ? 'border border-primary-500 shadow-md' : 'border border-transparent';
+          
+          // Renderiza a observação como um "status" embaixo do curso
+          const obsHTML = m.observation ? `<div class="mt-1.5"><span class="inline-block bg-slate-100 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg italic break-words max-w-full">💬 ${m.observation}</span></div>` : '';
+
           let adminControlsHTML = "";
           if (userProfile.role === "superadmin" && m.uid !== currentUser.uid) {
             adminControlsHTML = `<div class="flex-shrink-0 flex gap-2 items-center ml-2">
@@ -642,13 +840,29 @@
             </div>`;
           }
           return `<div class="card-style flex items-center gap-3 ${borderClass} mb-3 py-3 px-4">
-            <div class="bg-[#0f172a] w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 text-white">${i+1}</div>
-            <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-700">
-            <div class="flex-grow min-w-0"><p class="font-bold text-sm text-white truncate">${m.name}</p><p class="text-xs text-slate-400 truncate">${m.course}</p></div>
+            <div class="bg-slate-200 dark:bg-[#0f172a] w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 text-slate-800 dark:text-white">${i+1}</div>
+            <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-300 dark:border-slate-700">
+            <div class="flex-grow min-w-0">
+                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${m.course}</p>
+                ${obsHTML}
+            </div>
             ${adminControlsHTML}
           </div>`}).join("");
-        document.querySelectorAll('.delete-queue-btn').forEach(b => { b.addEventListener("click", () => { showConfirmModal("Remover da Fila", `Deseja remover ${b.dataset.name}?`, async () => { await deleteDoc(doc(db, "queues", currentQueueId, "members", b.dataset.uid)); await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `Admin removeu ${b.dataset.name}.`, type: "system", timestamp: serverTimestamp() }); }); }); });
-        document.querySelectorAll('.move-queue-btn').forEach(b => { b.addEventListener("click", () => { handleMoveInQueue(b.dataset.uid, b.dataset.direction); }); });
+        
+        document.querySelectorAll('.delete-queue-btn').forEach(b => { 
+            b.addEventListener("click", () => { 
+                showConfirmModal("Remover da Fila", `Deseja remover ${b.dataset.name}?`, async () => { 
+                    await deleteDoc(doc(db, "queues", currentQueueId, "members", b.dataset.uid)); 
+                    await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `Admin removeu ${b.dataset.name}.`, type: "system", timestamp: serverTimestamp() }); 
+                }); 
+            }); 
+        });
+        document.querySelectorAll('.move-queue-btn').forEach(b => { 
+            b.addEventListener("click", () => { 
+                window.handleMoveInQueue(b.dataset.uid, b.dataset.direction); 
+            }); 
+        });
       }
 
       async function renderQueueList() {
@@ -666,8 +880,8 @@
       function switchAuthTab(tabName) {
         const loginForm = el("login-form"), registerForm = el("register-form"), btnLogin = el("show-login-tab"), btnRegister = el("show-register-tab");
         btnLogin.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors"; btnRegister.className = "flex-1 pb-3 text-center font-bold text-slate-500 border-b-2 border-transparent transition-colors";
-        if (tabName === "login") { btnLogin.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10"; registerForm.style.display = "none"; loginForm.style.display = "block"; } 
-        else { btnRegister.className = "flex-1 pb-3 text-center font-bold text-indigo-500 border-b-2 border-indigo-500 transition-colors z-10"; loginForm.style.display = "none"; registerForm.style.display = "block"; }
+        if (tabName === "login") { btnLogin.className = "flex-1 pb-3 text-center font-bold text-primary-500 border-b-2 border-primary-500 transition-colors z-10"; registerForm.style.display = "none"; loginForm.style.display = "block"; } 
+        else { btnRegister.className = "flex-1 pb-3 text-center font-bold text-primary-500 border-b-2 border-primary-500 transition-colors z-10"; loginForm.style.display = "none"; registerForm.style.display = "block"; }
       }
 
       bindClick("login-btn", (e) => { e.preventDefault(); el("loading-section").style.display = "flex"; signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value).catch(() => { showToast("E-mail ou senha incorretos", "error"); el("loading-section").style.display = "none"; }); });
@@ -690,7 +904,7 @@
         if (currentMinutes < openMinutes || currentMinutes >= closeMinutes) { showToast("A fila está fechada!", "error"); return; }
         el("loading-section").style.display = "flex";
         try {
-            await setDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { name: userProfile.name, course: userProfile.course, photoUrl: userProfile.photoUrl || "", uid: currentUser.uid, timestamp: serverTimestamp() });
+            await setDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { name: userProfile.name, course: userProfile.course, photoUrl: userProfile.photoUrl || "", uid: currentUser.uid, timestamp: serverTimestamp(), observation: "" });
             await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: `${userProfile.name} entrou na fila!`, type: "system", timestamp: serverTimestamp() });
         } catch(err) { showToast("Erro ao entrar", "error"); } finally { el("loading-section").style.display = "none"; }
       });
@@ -707,7 +921,7 @@
         if(!name || !course) { showToast("Nome e Curso são obrigatórios", "error"); return; }
         el("loading-section").style.display = "flex";
         try {
-            const photo = tempPhotoDataUrl || userProfile?.photoUrl || `https://placehold.co/200x200/6366f1/ffffff?text=${name.charAt(0).toUpperCase()}`;
+            const photo = tempPhotoDataUrl || userProfile?.photoUrl || `https://placehold.co/200x200/${getThemeHex()}/ffffff?text=${name.charAt(0).toUpperCase()}`;
             const data = { name, course, phone, photoUrl: photo };
             await updateDoc(doc(db, "users", currentUser.uid), data); userProfile = {...userProfile, ...data};
             if (currentQueueId) {
@@ -720,12 +934,7 @@
         } catch(e) { showToast("Erro ao salvar a imagem. Tente uma menor.", "error"); } finally { el("loading-section").style.display = "none"; }
       });
 
-      // --- EVENTOS DO CHAT ---
-      bindClick("open-chat-btn", () => { 
-        el("logs-modal").style.display = "flex"; 
-        const list = el("logs-list");
-        setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
-      });
+      // --- EVENTOS DO HISTÓRICO ---
       bindClick("view-logs-btn", () => { 
         el("logs-modal").style.display = "flex"; 
         const list = el("logs-list");
@@ -733,41 +942,43 @@
       });
       bindClick("close-logs-modal", () => { el("logs-modal").style.display = "none"; });
 
+      // --- ENVIO DE OBSERVAÇÃO ---
       bindClick("save-observation-btn", async (e) => {
         e.preventDefault();
         const obsInput = el("userObservation");
         const obsText = obsInput.value.trim();
-        if (!obsText) return;
-        obsInput.value = "";
         try { 
-            await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: obsText, type: "user", sender: userProfile.name, photoUrl: userProfile.photoUrl || "", timestamp: serverTimestamp() }); 
-            showToast("Enviado!", "success"); 
+            await updateDoc(doc(db, "queues", currentQueueId, "members", currentUser.uid), { observation: obsText });
+            showToast("Observação guardada!", "success"); 
         } 
-        catch (err) { showToast("Erro ao enviar.", "error"); }
+        catch (err) { showToast("Erro ao guardar observação.", "error"); }
       });
 
-      bindClick("send-modal-chat-btn", async (e) => {
+      // --- ENVIO DO CHAT EMBUTIDO ---
+      el('chat-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const chatInput = el("modal-chat-input");
+        const chatInput = el("chat-input");
         const chatText = chatInput.value.trim();
         if (!chatText) return;
         chatInput.value = "";
         try { 
-            await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: chatText, type: "user", sender: userProfile.name, photoUrl: userProfile.photoUrl || "", timestamp: serverTimestamp() }); 
+            await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: chatText, type: "user", sender: userProfile.name, photoUrl: userProfile.photoUrl || "", uid: currentUser.uid, timestamp: serverTimestamp() }); 
         } 
         catch (err) { showToast("Erro ao enviar.", "error"); }
       });
 
-      el("modal-chat-input").addEventListener("keypress", function(e) {
-          if (e.key === "Enter") {
-              e.preventDefault();
-              el("send-modal-chat-btn").click();
-          }
-      });
-
       bindClick("close-profile-btn", () => { if (!userProfile?.name) showToast("Preencha o perfil.", "error"); else el("profile-overlay").style.display = "none"; });
-      bindClick("main-logout-btn", () => { localStorage.removeItem("lastQueueId"); signOut(auth).then(() => { showScreen("auth"); }); });
-      bindClick("back-to-selection-btn", () => { localStorage.removeItem("lastQueueId"); showScreen("queueSelection"); renderQueueList(); });
+      bindClick("main-logout-btn", () => { 
+          localStorage.removeItem("lastQueueId"); 
+          clearListeners();
+          signOut(auth).then(() => { showScreen("auth"); }); 
+      });
+      bindClick("back-to-selection-btn", () => { 
+          localStorage.removeItem("lastQueueId"); 
+          clearListeners();
+          showScreen("queueSelection"); 
+          renderQueueList(); 
+      });
       bindClick("show-login-tab", () => switchAuthTab("login")); bindClick("show-register-tab", () => switchAuthTab("register"));
       bindClick("join-new-queue-btn", () => el("join-queue-modal").style.display = "flex");
       bindClick("cancel-join-queue", () => el("join-queue-modal").style.display = "none");
