@@ -181,7 +181,7 @@
           <button type="button" id="save-schedule-btn" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-md">Salvar Horários</button>
           <div class="grid grid-cols-2 gap-3">
             <button type="button" id="restart-queue-btn" class="bg-[#ef4444] hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-md">Zerar Fila</button>
-            <button type="button" id="view-logs-btn" class="bg-[#475569] hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">Histórico</button>
+            <button type="button" id="view-logs-btn" class="bg-[#475569] hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">Histórico Completo</button>
           </div>
         </div>
 
@@ -205,11 +205,18 @@
           <p id="queue-status-message"></p>
         </div>
 
+        <!-- Botão de Chat Global -->
+        <button type="button" id="open-chat-btn" class="w-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold py-3.5 rounded-xl shadow-md flex justify-center items-center gap-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Abrir Chat / Histórico
+        </button>
+
+        <!-- Observação Externa -->
         <div id="observation-section" style="display: none;" class="card-style space-y-3">
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Sua Observação</label>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Aviso Rápido</label>
           <div class="flex items-center gap-2 w-full">
             <input type="text" id="userObservation" placeholder="Ex: Fui no banheiro..." class="flex-1 min-w-0 input-style" />
-            <button type="button" id="save-observation-btn" class="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-xl">Salvar</button>
+            <button type="button" id="save-observation-btn" class="shrink-0 bg-[#10b981] hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-xl">Enviar</button>
           </div>
         </div>
 
@@ -242,13 +249,20 @@
         </div>
     </div>
 
-    <div id="logs-modal" style="display: none;" class="modal-overlay">
-        <div class="w-full max-w-lg card-style space-y-4 fade-in-up flex flex-col max-h-[80vh]">
-            <div class="flex justify-between items-center shrink-0 border-b border-slate-700 pb-3">
-                <h2 class="text-xl font-bold text-white">Histórico</h2>
+    <!-- Modal do Chat -->
+    <div id="logs-modal" style="display: none;" class="modal-overlay z-[9999]">
+        <div class="w-full max-w-lg card-style space-y-4 fade-in-up flex flex-col h-[85vh]">
+            <div class="flex justify-between items-center shrink-0 border-b border-slate-200 dark:border-slate-700 pb-3">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Chat da Fila</h2>
                 <button type="button" id="close-logs-modal" class="text-slate-400 hover:text-red-500 text-3xl font-bold leading-none">&times;</button>
             </div>
-            <div id="logs-list" class="flex-grow overflow-y-auto space-y-3 pr-2"></div>
+            <div id="logs-list" class="flex-grow overflow-y-auto space-y-3 pr-2 scroll-smooth"></div>
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-200 dark:border-slate-700 shrink-0 mt-auto">
+                <input type="text" id="modal-chat-input" placeholder="Escreva uma mensagem..." class="flex-1 min-w-0 input-style py-3" />
+                <button type="button" id="send-modal-chat-btn" class="shrink-0 bg-indigo-500 hover:bg-indigo-600 text-white font-bold h-full aspect-square rounded-xl shadow-md flex items-center justify-center transition-transform active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -274,6 +288,8 @@
       </div>
     </div>
 
+    <!-- ============================================================== -->
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -296,12 +312,11 @@
       let currentUser = null, userProfile = null, currentQueueId = null;
       let currentQueueMembers = [], currentQueueSettings = null; 
       
-      // VARIÁVEIS DE RELÓGIO
       let timeOffsetMs = 0; 
       let isTimeSynced = false;
       
       let tempPhotoDataUrl = null;
-      let unsubMembers = null, unsubSettings = null;
+      let unsubMembers = null, unsubSettings = null, unsubChat = null;
       let pendingRegistrationPhone = ""; 
       const SUPER_ADMIN_UID = ["twqMzdcSPVT31cuQJKsE8HKxQBH3", "fezXWTgqXUMCUBUKSBau6Sv4K9n2"];
 
@@ -340,48 +355,65 @@
         });
       });
 
-      // --- RELÓGIO CORRIGIDO PARA EVITAR CORS E FALHAS ---
+      // --- LEITOR DE FOTO COM COMPRESSÃO INTELIGENTE ---
+      // Impede que fotos pesadas ultrapassem o limite de 1MB do Firestore e falhem no salvamento
+      bindClick("profile-pic-container", () => el("profile-pic-input").click());
+      el("profile-pic-input").addEventListener("change", function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function(event) {
+              const img = new Image();
+              img.onload = function() {
+                  const canvas = document.createElement("canvas");
+                  const MAX_SIZE = 256; // Reduz a foto para um tamanho perfeito de perfil
+                  let width = img.width;
+                  let height = img.height;
+
+                  if (width > height) {
+                      if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                  } else {
+                      if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                  }
+                  
+                  canvas.width = width;
+                  canvas.height = height;
+                  const ctx = canvas.getContext("2d");
+                  ctx.drawImage(img, 0, 0, width, height);
+                  
+                  // O formato JPEG a 80% de qualidade resolve o erro do Firestore
+                  tempPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+                  el("profile-pic-preview").src = tempPhotoDataUrl;
+              };
+              img.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+      });
+
       async function syncServerTime() {
         isTimeSynced = false;
-        const statusDot = el("sync-status-dot");
-        const statusText = el("sync-status-text");
-        
+        const statusDot = el("sync-status-dot"), statusText = el("sync-status-text");
         if(statusDot) { statusDot.classList.remove("bg-green-500", "bg-red-500"); statusDot.classList.add("bg-amber-500", "animate-pulse"); }
         if(statusText) statusText.textContent = "SINCRONIZANDO...";
 
-        // Lista de APIs públicas que permitem CORS para conferir a hora
-        const sources = [
-          'https://worldtimeapi.org/api/timezone/America/Sao_Paulo',
-          'https://timeapi.io/api/Time/current/zone?timeZone=America/Sao_Paulo'
-        ];
-
+        const sources = ['https://worldtimeapi.org/api/timezone/America/Sao_Paulo', 'https://timeapi.io/api/Time/current/zone?timeZone=America/Sao_Paulo'];
         for (let src of sources) {
           try {
             const res = await fetch(src, { cache: 'no-store' });
             if (res.ok) {
               const data = await res.json();
-              // worldtimeapi usa .datetime, timeapi.io usa .dateTime
               const dateStr = data.datetime || data.dateTime;
-              const realTime = new Date(dateStr).getTime();
-              timeOffsetMs = realTime - Date.now();
-              finishSync(true);
-              return;
+              timeOffsetMs = new Date(dateStr).getTime() - Date.now();
+              finishSync(true); return;
             }
           } catch (e) { console.warn(`Falha na fonte ${src}`); }
         }
-
-        // Se falhou em todas as fontes externas, usamos um "Soft Fallback":
-        // Não bloqueamos mais o usuário com a tarja vermelha, mas avisamos que o modo rígido falhou.
-        // O app continuará funcionando com a hora local, mas o offset será 0.
-        console.warn("Todas as APIs de tempo falharam. Usando relógio local como fallback.");
-        timeOffsetMs = 0;
-        finishSync(true); // Permitimos prosseguir para não travar o app
+        timeOffsetMs = 0; finishSync(true); 
       }
 
       function finishSync(success) {
         isTimeSynced = success;
-        const statusDot = el("sync-status-dot");
-        const statusText = el("sync-status-text");
+        const statusDot = el("sync-status-dot"), statusText = el("sync-status-text");
         if(statusDot) { statusDot.classList.remove("bg-amber-500", "animate-pulse"); statusDot.classList.add(success ? "bg-green-500" : "bg-red-500"); }
         if(statusText) statusText.textContent = success ? "HORÁRIO SINCRONIZADO" : "ERRO DE SINCRONIA";
       }
@@ -391,18 +423,15 @@
         const options = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const timeString = adjustedNow.toLocaleTimeString('pt-BR', options);
         const parts = new Intl.DateTimeFormat('pt-BR', options).formatToParts(adjustedNow);
-        let h = 0, m = 0;
-        parts.forEach(p => { if(p.type === 'hour') h = parseInt(p.value); if(p.type === 'minute') m = parseInt(p.value); });
+        let h = 0, m = 0; parts.forEach(p => { if(p.type === 'hour') h = parseInt(p.value); if(p.type === 'minute') m = parseInt(p.value); });
         const dateOptions = { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' };
         const dateParts = new Intl.DateTimeFormat('pt-BR', dateOptions).formatToParts(adjustedNow);
-        let yyyy, mm, dd;
-        dateParts.forEach(p => { if(p.type === 'year') yyyy = p.value; if(p.type === 'month') mm = p.value; if(p.type === 'day') dd = p.value; });
+        let yyyy, mm, dd; dateParts.forEach(p => { if(p.type === 'year') yyyy = p.value; if(p.type === 'month') mm = p.value; if(p.type === 'day') dd = p.value; });
         return { timeString, hour: h, minute: m, dateStringBRT: `${yyyy}-${mm}-${dd}` };
       }
 
       function initClock() {
-        syncServerTime();
-        setInterval(syncServerTime, 600000); // Re-sincroniza a cada 10 min
+        syncServerTime(); setInterval(syncServerTime, 600000); 
         setInterval(() => {
           const brt = getFormattedTime();
           document.querySelectorAll('.server-clock-display').forEach(el => el.textContent = brt.timeString);
@@ -447,9 +476,7 @@
       }
 
       function showScreen(s) {
-        ["auth-overlay", "profile-overlay", "main-content", "queue-selection-screen"].forEach(id => {
-            if(el(id)) el(id).style.display = "none";
-        });
+        ["auth-overlay", "profile-overlay", "main-content", "queue-selection-screen"].forEach(id => { if(el(id)) el(id).style.display = "none"; });
         if (s !== "main" && el("random-join-btn")) el("random-join-btn").classList.add("hidden");
         if (s === "auth") el("auth-overlay").style.display = "flex";
         else if (s === "profile") el("profile-overlay").style.display = "flex";
@@ -490,15 +517,70 @@
             localStorage.setItem("lastQueueId", id);
             el("header-queue-name").textContent = currentQueueSettings.name;
             showScreen("main");
-            if (unsubMembers) unsubMembers(); if (unsubSettings) unsubSettings(); 
+            
+            if (unsubMembers) unsubMembers(); 
+            if (unsubSettings) unsubSettings(); 
+            if (unsubChat) unsubChat();
+
             unsubMembers = onSnapshot(query(collection(db, "queues", id, "members"), orderBy("timestamp")), (s) => {
               currentQueueMembers = s.docs.map(d => ({...d.data(), uid: d.id}));
               renderQueueView(currentQueueMembers);
               updatePeriodicUI(getFormattedTime());
             });
+
             unsubSettings = onSnapshot(doc(db, "queues", id), (s) => { 
               if(s.exists()) { currentQueueSettings = s.data(); updatePeriodicUI(getFormattedTime()); }
             });
+
+            // --- RENDERIZA O CHAT COM A FOTO SEMPRE ATUALIZADA ---
+            unsubChat = onSnapshot(query(collection(db, "queues", id, "chat"), orderBy("timestamp", "desc"), limit(50)), (s) => {
+                const list = el("logs-list");
+                if(list) {
+                    list.innerHTML = "";
+                    const docsArray = [...s.docs].reverse();
+                    
+                    docsArray.forEach(d => {
+                        const data = d.data();
+                        let t = "Agora";
+                        if (data.timestamp && typeof data.timestamp.toDate === 'function') {
+                            t = new Date(data.timestamp.toDate()).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+                        }
+
+                        const isSystem = data.type === 'system';
+                        const isMe = data.sender === userProfile?.name && !isSystem;
+
+                        if (isSystem) {
+                            const div = document.createElement("div");
+                            div.className = `p-2 mx-auto text-center rounded-xl text-xs bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 max-w-[80%]`;
+                            div.innerHTML = data.text;
+                            list.appendChild(div);
+                        } else {
+                            const wrapper = document.createElement("div");
+                            wrapper.className = `flex w-full gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'} items-end`;
+
+                            // Lógica inteligente: Pega a foto ATUAL do usuário se ele estiver na fila. Se não, usa a que salvou quando ele mandou a mensagem.
+                            const activeMember = currentQueueMembers.find(m => m.name === data.sender);
+                            const livePhoto = activeMember ? activeMember.photoUrl : null;
+                            const avatarSrc = livePhoto || data.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${data.sender ? data.sender.charAt(0).toUpperCase() : "U"}`;
+
+                            const avatarImg = document.createElement("img");
+                            avatarImg.src = avatarSrc;
+                            avatarImg.className = "w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600 shadow-sm";
+
+                            const msgDiv = document.createElement("div");
+                            msgDiv.className = `p-3 rounded-xl text-sm max-w-[75%] shadow-sm ${isMe ? 'bg-indigo-500 text-white rounded-br-none' : 'bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-bl-none'}`;
+                            msgDiv.innerHTML = `<div class="flex items-baseline gap-2 mb-1"><span class="font-bold text-xs ${isMe ? 'text-indigo-200' : 'text-indigo-500'}">${isMe ? 'Você' : data.sender}</span><span class="text-[10px] opacity-70 ml-auto pl-2">${t}</span></div><div class="break-words">${data.text}</div>`;
+                            
+                            wrapper.appendChild(avatarImg);
+                            wrapper.appendChild(msgDiv);
+                            list.appendChild(wrapper);
+                        }
+                    });
+                    
+                    setTimeout(() => { list.scrollTop = list.scrollHeight; }, 50);
+                }
+            });
+
             const initial = userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : "U";
             el("header-user-avatar").src = userProfile?.photoUrl || `https://placehold.co/100x100/6366f1/ffffff?text=${initial}`;
             if (userProfile.role === "superadmin") { el("super-admin-panel").style.display = "block"; el("queueOpenTime").value = currentQueueSettings.openTime || ""; el("queueCloseTime").value = currentQueueSettings.closeTime || ""; } 
@@ -537,6 +619,8 @@
         const joinBtn = el("random-join-btn");
         if (!isIn && isOpen) { if (joinBtn.classList.contains("hidden")) { joinBtn.classList.remove("hidden"); placeRandomButton(); } } 
         else joinBtn.classList.add("hidden");
+        
+        if (isIn) { el("observation-section").style.display = "block"; } else { el("observation-section").style.display = "none"; }
       }
 
       function renderQueueView(members) {
@@ -633,7 +717,52 @@
                el("header-user-avatar").src = photo; el("profile-overlay").style.display = "none";
             } else { el("profile-overlay").style.display = "none"; showScreen("queueSelection"); renderQueueList(); }
             showToast("Perfil salvo!", "success");
-        } catch(e) { showToast("Erro ao salvar", "error"); } finally { el("loading-section").style.display = "none"; }
+        } catch(e) { showToast("Erro ao salvar a imagem. Tente uma menor.", "error"); } finally { el("loading-section").style.display = "none"; }
+      });
+
+      // --- EVENTOS DO CHAT ---
+      bindClick("open-chat-btn", () => { 
+        el("logs-modal").style.display = "flex"; 
+        const list = el("logs-list");
+        setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+      });
+      bindClick("view-logs-btn", () => { 
+        el("logs-modal").style.display = "flex"; 
+        const list = el("logs-list");
+        setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+      });
+      bindClick("close-logs-modal", () => { el("logs-modal").style.display = "none"; });
+
+      bindClick("save-observation-btn", async (e) => {
+        e.preventDefault();
+        const obsInput = el("userObservation");
+        const obsText = obsInput.value.trim();
+        if (!obsText) return;
+        obsInput.value = "";
+        try { 
+            await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: obsText, type: "user", sender: userProfile.name, photoUrl: userProfile.photoUrl || "", timestamp: serverTimestamp() }); 
+            showToast("Enviado!", "success"); 
+        } 
+        catch (err) { showToast("Erro ao enviar.", "error"); }
+      });
+
+      bindClick("send-modal-chat-btn", async (e) => {
+        e.preventDefault();
+        const chatInput = el("modal-chat-input");
+        const chatText = chatInput.value.trim();
+        if (!chatText) return;
+        chatInput.value = "";
+        try { 
+            await addDoc(collection(db, "queues", currentQueueId, "chat"), { text: chatText, type: "user", sender: userProfile.name, photoUrl: userProfile.photoUrl || "", timestamp: serverTimestamp() }); 
+        } 
+        catch (err) { showToast("Erro ao enviar.", "error"); }
+      });
+
+      el("modal-chat-input").addEventListener("keypress", function(e) {
+          if (e.key === "Enter") {
+              e.preventDefault();
+              el("send-modal-chat-btn").click();
+          }
       });
 
       bindClick("close-profile-btn", () => { if (!userProfile?.name) showToast("Preencha o perfil.", "error"); else el("profile-overlay").style.display = "none"; });
@@ -668,4 +797,3 @@
     </script>
   </body>
 </html>
-
