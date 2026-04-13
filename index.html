@@ -358,6 +358,14 @@
       const db = getFirestore(app);
       const el = (id) => document.getElementById(id);
 
+      // --- FUNÇÃO DE SEGURANÇA (Prevenção de XSS) ---
+      function escapeHTML(str) {
+          if (typeof str !== 'string') return "";
+          return str.replace(/[&<>"']/g, function(m) {
+              return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+          });
+      }
+
       let currentUser = null, userProfile = null, currentQueueId = null;
       let currentQueueMembers = [], currentQueueSettings = null; 
       
@@ -677,20 +685,20 @@
               const activeMember = currentQueueMembers.find(m => m.uid === msg.uid);
               const livePhoto = activeMember ? activeMember.photoUrl : null;
               
-              // Evita erros com mensagens antigas que usavam userName em vez de sender
               const senderName = msg.sender || msg.userName || "Usuário";
-              const avatarSrc = livePhoto || msg.photoUrl || msg.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${senderName.charAt(0).toUpperCase()}`;
+              const safeSenderName = escapeHTML(senderName);
+              const avatarSrc = livePhoto || msg.photoUrl || msg.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${safeSenderName.charAt(0).toUpperCase()}`;
 
               return `
                   <div class="flex items-start gap-2.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}">
-                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600 shadow-sm" src="${avatarSrc}" alt="${senderName}">
+                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600 shadow-sm" src="${avatarSrc}" alt="${safeSenderName}">
                       <div class="flex flex-col gap-1 ${isMe ? 'items-end' : 'items-start'} w-full max-w-[85%]">
                           <div class="flex items-center space-x-2">
-                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : senderName.split(' ')[0]}</span>
+                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : safeSenderName.split(' ')[0]}</span>
                               <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">${t}</span>
                           </div>
                           <div class="leading-snug p-3 rounded-xl text-sm shadow-sm ${isMe ? 'bg-primary-500 text-white rounded-tr-none' : 'bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-none'} w-full">
-                              <p class="break-words">${msg.text}</p>
+                              <p class="break-words">${escapeHTML(msg.text)}</p>
                           </div>
                       </div>
                   </div>`;
@@ -717,7 +725,7 @@
                       <div class="text-sm p-3 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-start gap-3">
                           <span class="mt-0.5">⚙️</span>
                           <div>
-                              <p class="font-medium text-slate-700 dark:text-slate-300">${log.text}</p>
+                              <p class="font-medium text-slate-700 dark:text-slate-300">${escapeHTML(log.text)}</p>
                               <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">${t}</p>
                           </div>
                       </div>`;
@@ -725,18 +733,19 @@
               
               const isMe = log.uid === currentUser.uid;
               const senderName = log.sender || log.userName || "Usuário";
-              const avatarSrc = log.photoUrl || log.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${senderName.charAt(0).toUpperCase()}`;
+              const safeSenderName = escapeHTML(senderName);
+              const avatarSrc = log.photoUrl || log.userPhotoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${safeSenderName.charAt(0).toUpperCase()}`;
 
               return `
                   <div class="flex items-start gap-2.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}">
-                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600" src="${avatarSrc}" alt="${senderName}">
+                      <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-300 dark:border-slate-600" src="${avatarSrc}" alt="${safeSenderName}">
                       <div class="flex flex-col gap-1 ${isMe ? 'items-end' : 'items-start'} max-w-[85%]">
                           <div class="flex items-center space-x-2">
-                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : senderName.split(' ')[0]}</span>
+                              <span class="text-xs font-semibold ${isMe ? 'text-primary-500' : 'text-slate-900 dark:text-white'}">${isMe ? 'Você' : safeSenderName.split(' ')[0]}</span>
                               <span class="text-[10px] font-normal text-slate-500">${t}</span>
                           </div>
                           <div class="leading-snug p-3 rounded-xl text-sm shadow-sm ${isMe ? 'bg-primary-500 text-white rounded-tr-none' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-tl-none'}">
-                              <p class="break-words">${log.text}</p>
+                              <p class="break-words">${escapeHTML(log.text)}</p>
                           </div>
                       </div>
                   </div>`;
@@ -778,7 +787,6 @@
         if (isIn) { el("observation-section").style.display = "block"; } else { el("observation-section").style.display = "none"; }
       }
 
-      // Adicionando a função handleMoveInQueue que estava faltando no escopo global
       async function handleMoveInQueue(uid, direction) {
           const queue = [...currentQueueMembers];
           const userIndex = queue.findIndex(u => u.uid === uid);
@@ -808,7 +816,6 @@
           catch(error) { showToast("Erro ao mover usuário.", "error"); }
       }
 
-      // Tornando a função acessível no escopo global para os botões gerados dinamicamente
       window.handleMoveInQueue = handleMoveInQueue;
 
       function renderQueueView(members) {
@@ -817,7 +824,6 @@
         el("total-in-queue").textContent = members.length;
         el("header-leave-queue-btn").style.display = idx !== -1 ? "block" : "none";
         
-        // Atualiza a caixa de texto de observação se não estiver focada
         if (idx !== -1 && el("userObservation") && document.activeElement !== el("userObservation")) {
             el("userObservation").value = members[idx].observation || '';
         }
@@ -825,17 +831,20 @@
         el("queue-list").innerHTML = members.length === 0 
           ? `<div class="text-center text-slate-500 py-8 font-medium">A fila está vazia.</div>` 
           : members.map((m, i) => {
-          const avatar = m.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${m.name ? m.name.charAt(0).toUpperCase() : "U"}`;
+          
+          const safeName = escapeHTML(m.name || "");
+          const safeCourse = escapeHTML(m.course || "");
+          
+          const avatar = m.photoUrl || `https://placehold.co/100x100/${getThemeHex()}/ffffff?text=${safeName.charAt(0).toUpperCase()}`;
           const borderClass = m.uid === currentUser.uid ? 'border border-primary-500 shadow-md' : 'border border-transparent';
           
-          // Renderiza a observação como um "status" embaixo do curso
-          const obsHTML = m.observation ? `<div class="mt-1.5"><span class="inline-block bg-slate-100 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg italic break-words max-w-full">💬 ${m.observation}</span></div>` : '';
+          const obsHTML = m.observation ? `<div class="mt-1.5"><span class="inline-block bg-slate-100 dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg italic break-words max-w-full">💬 ${escapeHTML(m.observation)}</span></div>` : '';
 
           let adminControlsHTML = "";
           if (userProfile.role === "superadmin" && m.uid !== currentUser.uid) {
             adminControlsHTML = `<div class="flex-shrink-0 flex gap-2 items-center ml-2">
                 <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="up">▲</button>
-                <button class="delete-queue-btn bg-red-500/20 w-9 h-9 rounded-xl text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-name="${m.name}">✕</button>
+                <button class="delete-queue-btn bg-red-500/20 w-9 h-9 rounded-xl text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-name="${safeName}">✕</button>
                 <button class="move-queue-btn bg-[#0f172a] w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center" data-uid="${m.uid}" data-direction="down">▼</button>
             </div>`;
           }
@@ -843,8 +852,8 @@
             <div class="bg-slate-200 dark:bg-[#0f172a] w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 text-slate-800 dark:text-white">${i+1}</div>
             <img src="${avatar}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-300 dark:border-slate-700">
             <div class="flex-grow min-w-0">
-                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${m.course}</p>
+                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${safeName}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${safeCourse}</p>
                 ${obsHTML}
             </div>
             ${adminControlsHTML}
@@ -871,7 +880,7 @@
           const d = await getDoc(doc(db, "queues", id));
           if(d.exists()) {
             const div = document.createElement("div"); div.className = "card-style cursor-pointer hover:bg-slate-800 transition-colors";
-            div.innerHTML = `<h3 class="font-bold text-lg text-white">${d.data().name}</h3><p class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Código: ${d.data().code}</p>`;
+            div.innerHTML = `<h3 class="font-bold text-lg text-white">${escapeHTML(d.data().name)}</h3><p class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Código: ${escapeHTML(d.data().code)}</p>`;
             div.onclick = () => enterQueue(id); list.appendChild(div);
           }
         }
